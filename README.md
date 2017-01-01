@@ -1,2 +1,3 @@
-# systems final project jan 2017
-# Xinhui Xu, 
+# Systems final project - Xinhui Xu,
+### Jan 2017
+
