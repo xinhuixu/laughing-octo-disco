@@ -1,0 +1,3 @@
+main.c
+    prompt username, stores as global variable
+    enters while loop
