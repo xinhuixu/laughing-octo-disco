@@ -1,3 +1,1 @@
-# Systems final project - Xinhui Xu,
-### Jan 2017
-
+# Systems final project - Nala Sharadjaya, Xinhui Xu
