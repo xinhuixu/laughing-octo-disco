@@ -1,5 +1,7 @@
+all: server.exe client.exe
+
 server.exe : server.h server.c
-	gcc -c server.c
+	gcc -c server.c -o server.exe
 
 client.exe: client.h client.c
 	gcc -lreadline client.c -o client.exe
