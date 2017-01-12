@@ -48,7 +48,7 @@ char* prompt(){
   strcpy(p, ">>");
   return p;
 }
-
+/*
 int main() {
   
   char *input;
@@ -59,3 +59,4 @@ int main() {
   }
   return 0;
 }
+*/
