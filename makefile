@@ -1,10 +1,10 @@
-all: server client
+all: server.exe client.exe
 
-server: server.o networking.o
-	gcc -o server server.o networking.o
+server.exe: server.o networking.o
+	gcc -o server.exe server.o networking.o
 
-client: client.o networking.o
-	gcc -o client client.o networking.o
+client.exe: client.o networking.o
+	gcc -o client.exe client.o networking.o
 
 server.o: server.c networking.h
 	gcc -c server.c
@@ -17,4 +17,5 @@ networking.o: networking.c networking.h
 
 clean:
 	rm *.o
+	rm *.exe
 	rm *~
