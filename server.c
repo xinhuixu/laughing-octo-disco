@@ -36,12 +36,16 @@ int main() {
 
 void sub_server( int sd ) {
   int pid;
+  bool test;
+  test = true;
+  printf("test bool %d\n",test);
+  
   pid = getpid();
   
   /* RETRIEVE USERNAME */
   char username[MESSAGE_BUFFER_SIZE];
   read( sd, username, sizeof(username) );
-  printf("[SERVER %d] welcomes user: %s\n", pid, username);
+  printf("[SERVER %d] new login: %s\n", pid, username);
   write( sd, username, sizeof(username));
 
   
