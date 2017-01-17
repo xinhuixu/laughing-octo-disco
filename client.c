@@ -12,6 +12,14 @@
 
 #include "networking.h"
 
+char* prompt(){
+  char *p;
+  p = (char *) malloc(sizeof(char)*3);
+  strcpy(p, ">>");
+  printf("%s", p);
+  return p;
+}
+
 int main( int argc, char *argv[] ) {
 
   char *host;
@@ -28,13 +36,17 @@ int main( int argc, char *argv[] ) {
 
   char buffer[MESSAGE_BUFFER_SIZE];
   
+  
   while (1) {
-    printf("enter message: ");
+    //printf("enter message: ");
+    prompt();
     fgets( buffer, sizeof(buffer), stdin );
+
     char *p = strchr(buffer, '\n');
     *p = 0;
   
     write( sd, buffer, sizeof(buffer) );
+
     read( sd, buffer, sizeof(buffer) );
     printf( "received: %s\n", buffer );
   }
@@ -42,12 +54,7 @@ int main( int argc, char *argv[] ) {
   return 0;
 }
 
-char* prompt(){
-  char *p;
-  p = (char *) malloc(sizeof(char)*3);
-  strcpy(p, ">>");
-  return p;
-}
+
 /*
 int main() {
   
