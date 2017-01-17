@@ -36,9 +36,8 @@ int main() {
 
 void sub_server( int sd ) {
   int pid;
-  bool test;
-  test = true;
-  printf("test bool %d\n",test);
+  bool USERNAME_SET = false;
+  bool HOME = false; //new project my project: 0, 1
   
   pid = getpid();
   
@@ -46,19 +45,29 @@ void sub_server( int sd ) {
   char username[MESSAGE_BUFFER_SIZE];
   read( sd, username, sizeof(username) );
   printf("[SERVER %d] new login: %s\n", pid, username);
-  write( sd, username, sizeof(username));
+  USERNAME_SET = true;
+  
+  char instruct[MESSAGE_BUFFER_SIZE];
+  strcpy(instruct, "New project[0]\tMy projects[1]");
+  write(sd, instruct, sizeof(instruct)); 
 
   
   char buffer[MESSAGE_BUFFER_SIZE];
   while (read( sd, buffer, sizeof(buffer) )) {
 
     printf("[SERVER %d] received: %s\n", pid, buffer );
-    process( buffer );
+    process( buffer, instruct );
     write( sd, buffer, sizeof(buffer));    
   }
   
 }
 
+void process( char* buffer, char* instruct){
+
+
+}
+
+/*
 void process( char* s ){
 
   /* DIR* dir = opendir("projects/demo_proj");

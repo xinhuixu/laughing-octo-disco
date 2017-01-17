@@ -38,7 +38,6 @@ int main( int argc, char *argv[] ) {
   
   
   while (1) {
-    //printf("enter message: ");
     prompt();
     fgets( buffer, sizeof(buffer), stdin );
 
@@ -48,7 +47,8 @@ int main( int argc, char *argv[] ) {
     write( sd, buffer, sizeof(buffer) );
 
     read( sd, buffer, sizeof(buffer) );
-    printf( "received: %s\n", buffer );
+    printf( "%s\n", buffer );
+   
   }
   
   return 0;
