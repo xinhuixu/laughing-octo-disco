@@ -38,7 +38,10 @@ void sub_server( int sd ) {
   int pid;
   bool USERNAME_SET = false;
   bool HOME = false; //new project my project: 0, 1
-  
+  char buffer[MESSAGE_BUFFER_SIZE];
+  char instruct[MESSAGE_BUFFER_SIZE];
+  char invalid[MESSAGE_BUFFER_SIZE];
+  strcpy(invalid, "Invalid command.");
   pid = getpid();
   
   /* RETRIEVE USERNAME */
@@ -46,28 +49,48 @@ void sub_server( int sd ) {
   read( sd, username, sizeof(username) );
   printf("[SERVER %d] new login: %s\n", pid, username);
   USERNAME_SET = true;
-  
-  char instruct[MESSAGE_BUFFER_SIZE];
-  strcpy(instruct, "New project[0]\tMy projects[1]");
-  write(sd, instruct, sizeof(instruct)); 
 
+  strcpy(instruct, "New project[0]\tMy projects[1]");
+  write(sd, instruct, sizeof(instruct));
   
-  char buffer[MESSAGE_BUFFER_SIZE];
+  while (HOME == false){
+    read( sd, buffer, sizeof(buffer));
+    if ( strcmp(buffer, "0") == 0 ){
+      //new_proj();
+      strcpy(instruct, "Enter title of new project:");
+      write(sd, instruct, sizeof(instruct)); 
+      HOME = true;
+    }
+    else if ( strcmp(buffer, "1") == 0) {
+      //my_proj();
+      strcpy(instruct, "[placeholder] List of projects");
+      write(sd, instruct, sizeof(instruct)); 
+      HOME = true;
+    }
+    else {
+      //      write(sd, invalid, sizeof(invalid)); doesnt work
+      write(sd, instruct, sizeof(instruct)); 
+      
+    }
+  }
+  
+  
+  //char buffer[MESSAGE_BUFFER_SIZE];
   while (read( sd, buffer, sizeof(buffer) )) {
 
     printf("[SERVER %d] received: %s\n", pid, buffer );
-    process( buffer, instruct );
+    process( buffer);
     write( sd, buffer, sizeof(buffer));    
   }
   
 }
 
+/*
 void process( char* buffer, char* instruct){
 
 
-}
+}*/
 
-/*
 void process( char* s ){
 
   /* DIR* dir = opendir("projects/demo_proj");
