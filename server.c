@@ -11,19 +11,13 @@ void sub_server( int sd );
 
 int main() {
   int sd, connection;
-
   sd = server_setup();
-    
   while (1) {
-
     connection = server_connect( sd );
-
     int f = fork();
     if ( f == 0 ) {
-
       close(sd);
       sub_server( connection );
-
       exit(0);
     }
     else {
@@ -38,6 +32,7 @@ void sub_server( int sd ) {
   int pid;
   bool USERNAME_SET = false;
   bool HOME = false; //new project my project: 0, 1
+  bool INVALID = false;
   char buffer[MESSAGE_BUFFER_SIZE];
   char instruct[MESSAGE_BUFFER_SIZE];
   char invalid[MESSAGE_BUFFER_SIZE];
@@ -55,6 +50,7 @@ void sub_server( int sd ) {
   
   while (HOME == false){
     read( sd, buffer, sizeof(buffer));
+    
     if ( strcmp(buffer, "0") == 0 ){
       //new_proj();
       strcpy(instruct, "Enter title of new project:");
@@ -68,9 +64,11 @@ void sub_server( int sd ) {
       HOME = true;
     }
     else {
-      //      write(sd, invalid, sizeof(invalid)); doesnt work
-      write(sd, instruct, sizeof(instruct)); 
-      
+      if (INVALID == false) {
+	sprintf(invalid, "%s\n%s", invalid, instruct);
+	INVALID = true;
+      }
+      write(sd, invalid, sizeof(invalid));       
     }
   }
   
