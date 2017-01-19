@@ -14,7 +14,7 @@ int main() {
   char buf[1024];
   char *line, *record;
   int i=0, j=0;
-  int arr[10][10];
+  char arr[10][10];
 
   for(i=0; i<10; i++) {
     for(j=0; j<10; j++) {
@@ -29,15 +29,16 @@ int main() {
   while( (line = fgets(buf, sizeof(buf), fd)) != NULL ) {
     record = strtok(line, ",");
     while( record != NULL ) {
-      //printf("record: %s\n", record);
-      arr[i][j++] = atoi(record);
+      printf("record: %s\n", record);
+      arr[i][j++] = *record;
+      printf("arr[i][j]: %s\n", arr[i][j]);
       record = strtok(NULL, ",");
     }
     ++i;
   }
 
   fclose(fd);
-
+  /*
   for(i=0; i<10; i++) {
     printf("[");
     for(j=0; j<10; j++) {
@@ -45,6 +46,6 @@ int main() {
     }
     printf("  ]\n");
   }
-
+  */
   return 0;
 }
