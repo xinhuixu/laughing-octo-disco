@@ -31,12 +31,10 @@ int main() {
 void sub_server( int sd ) {
   int pid;
   bool USERNAME_SET = false;
-  bool HOME = false; //new project my project: 0, 1
+  bool HOME = false;
   bool INVALID = false;
   char buffer[MESSAGE_BUFFER_SIZE];
-  char instruct[MESSAGE_BUFFER_SIZE];
-  char invalid[MESSAGE_BUFFER_SIZE];
-  strcpy(invalid, "Invalid command.");
+
   pid = getpid();
   
   /* RETRIEVE USERNAME */
@@ -44,50 +42,38 @@ void sub_server( int sd ) {
   read( sd, username, sizeof(username) );
   printf("[SERVER %d] new login: %s\n", pid, username);
   USERNAME_SET = true;
+  
+  strcpy(buffer, "New project[0]\tMy projects[1]");
+  write(sd, buffer, sizeof(buffer));
 
-  strcpy(instruct, "New project[0]\tMy projects[1]");
-  write(sd, instruct, sizeof(instruct));
-  
-  while (HOME == false){
-    read( sd, buffer, sizeof(buffer));
-    
-    if ( strcmp(buffer, "0") == 0 ){
-      //new_proj();
-      strcpy(instruct, "Enter title of new project:");
-      write(sd, instruct, sizeof(instruct)); 
-      HOME = true;
-    }
-    else if ( strcmp(buffer, "1") == 0) {
-      //my_proj();
-      strcpy(instruct, "[placeholder] List of projects");
-      write(sd, instruct, sizeof(instruct)); 
-      HOME = true;
-    }
-    else {
-      if (INVALID == false) {
-	sprintf(invalid, "%s\n%s", invalid, instruct);
-	INVALID = true;
-      }
-      write(sd, invalid, sizeof(invalid));       
-    }
-  }
-  
-  
-  //char buffer[MESSAGE_BUFFER_SIZE];
   while (read( sd, buffer, sizeof(buffer) )) {
 
     printf("[SERVER %d] received: %s\n", pid, buffer );
-    process( buffer);
+    
+    HOME = home_process( buffer);
     write( sd, buffer, sizeof(buffer));    
   }
   
 }
 
-/*
-void process( char* buffer, char* instruct){
+bool home_process( char* buffer ){
+  
+  if ( strcmp(buffer, "0") == 0 ){
+    //new_proj();
+    strcpy(buffer, "Enter title of new project:");
+    return true;
+  }
+  else if ( strcmp(buffer, "1") == 0) {
+    //my_proj();
+    strcpy(buffer, "[placeholder] List of projects");
+    return true;
+  }
+  else {
+    sprintf(buffer, "Invalid command.\n%s", buffer);
+    return false;
+  }
 
-
-}*/
+}
 
 void process( char* s ){
 
