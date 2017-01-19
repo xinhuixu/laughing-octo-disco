@@ -42,15 +42,19 @@ void sub_server( int sd ) {
   read( sd, username, sizeof(username) );
   printf("[SERVER %d] new login: %s\n", pid, username);
   USERNAME_SET = true;
-  
+
+  HOME = true;
   strcpy(buffer, "New project[0]\tMy projects[1]");
   write(sd, buffer, sizeof(buffer));
 
   while (read( sd, buffer, sizeof(buffer) )) {
 
     printf("[SERVER %d] received: %s\n", pid, buffer );
+
+    if (HOME){
+      HOME = home_process( buffer);
+    }
     
-    HOME = home_process( buffer);
     write( sd, buffer, sizeof(buffer));    
   }
   
@@ -61,16 +65,16 @@ bool home_process( char* buffer ){
   if ( strcmp(buffer, "0") == 0 ){
     //new_proj();
     strcpy(buffer, "Enter title of new project:");
-    return true;
+    return false;
   }
   else if ( strcmp(buffer, "1") == 0) {
     //my_proj();
     strcpy(buffer, "[placeholder] List of projects");
-    return true;
+    return false;
   }
   else {
-    sprintf(buffer, "Invalid command.\n%s", buffer);
-    return false;
+    strcpy(buffer, "New project[0]\tMy projects[1]\nInvalid command.");
+    return true;
   }
 
 }
