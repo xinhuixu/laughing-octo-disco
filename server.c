@@ -31,7 +31,7 @@ int main() {
 void sub_server( int sd ) {
   int pid;
   bool USERNAME_SET = false;
-  bool HOME = false;
+  int HOME;
   bool INVALID = false;
   char buffer[MESSAGE_BUFFER_SIZE];
 
@@ -43,7 +43,8 @@ void sub_server( int sd ) {
   printf("[SERVER %d] new login: %s\n", pid, username);
   USERNAME_SET = true;
 
-  HOME = true;
+  /* OPEN HOME */
+  HOME = 999;
   strcpy(buffer, "New project[0]\tMy projects[1]");
   write(sd, buffer, sizeof(buffer));
 
@@ -51,30 +52,34 @@ void sub_server( int sd ) {
 
     printf("[SERVER %d] received: %s\n", pid, buffer );
 
-    if (HOME){
-      HOME = home_process( buffer);
+    if (HOME == 999) {
+      HOME = home_process( buffer);      
+    } else if (HOME == 0) {
+      char new_proj_name[MESSAGE_BUFFER_SIZE];
+      strcpy(new_proj_name, buffer);
+      printf("[SERVER %d] new project [%s] created by [%s]\n",pid, new_proj_name, username);
+      strcpy(buffer, "Project created.");
+      HOME = 999;
     }
-    
-    write( sd, buffer, sizeof(buffer));    
-  }
-  
-}
 
-bool home_process( char* buffer ){
+    write(sd, buffer, sizeof(buffer));
+  }
+}
+int home_process( char* buffer ){
   
   if ( strcmp(buffer, "0") == 0 ){
     //new_proj();
     strcpy(buffer, "Enter title of new project:");
-    return false;
+    return 0;
   }
   else if ( strcmp(buffer, "1") == 0) {
     //my_proj();
     strcpy(buffer, "[placeholder] List of projects");
-    return false;
+    return 1;
   }
   else {
     strcpy(buffer, "New project[0]\tMy projects[1]\nInvalid command.");
-    return true;
+    return -1;
   }
 
 }
