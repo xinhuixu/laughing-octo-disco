@@ -9,19 +9,17 @@
 
 //ty stackoverflow: http://stackoverflow.com/questions/20013693/read-csv-file-to-a-2d-array-on-c
 
-int main() {
-  
+int parse_csv(char arr[100][3][1024]) {
   FILE *fd = fopen("test.txt", "r"); //open file
   char buf[1024]; //file will be read into this
   char *line, *record; //for reading into array purposes
   int i=0, j=0, k=0; //counters
-  int rows=3, cols=0; //for printing purposes
-  char arr[10][3][1024]; //array!
+  int cols=3, rows=0; //for printing purposes
 
   //just in case data is missing, etc
   char *add = "none";
-  for(i=0; i<10; i++) {
-    for(j=0; j<3; j++) {
+  for(i=0; i<100; i++) {
+    for(j=0; j<cols; j++) {
       for(k=0; k<strlen("none")+1; k++, add++) {
 	strcpy(&arr[i][j][k], add);
       }
@@ -33,7 +31,6 @@ int main() {
   //error handling for file opening
   if( fd == NULL ) {
     printf("Couldn't open file!\n");
-    return -1;
   }
   //read file line-by-line
   while( (line = fgets(buf, sizeof(buf), fd)) != NULL ) {
@@ -52,20 +49,26 @@ int main() {
     }
     j=0;
     i++;
-    cols++;
+    rows++;
   }
 
+  fclose(fd);
+
+  return rows;
+}
+
+int main() {
+  char arr[100][3][1024]; //array!
+  int i=0,j=0; int cols=3,rows=parse_csv(arr);
+ 
   //printy things
-  for(i=0; i<cols; i++) {
+  for(i=0; i<rows; i++) {
     printf("[");
-    for(j=0; j<rows; j++) {
+    for(j=0; j<cols; j++) {
       printf("  %s", arr[i][j]);
     }
     printf("  ]\n");
   }
-
-  //close file
-  fclose(fd);
 
   return 0;
 }
