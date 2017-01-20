@@ -61,7 +61,7 @@ int main() {
   char arr[100][3][1024]; //array!
   int i=0,j=0; int cols=3,rows=parse_csv(arr);
  
-  //printy things
+  //testy printy things
   for(i=0; i<rows; i++) {
     printf("[");
     for(j=0; j<cols; j++) {
