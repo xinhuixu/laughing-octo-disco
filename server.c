@@ -34,7 +34,8 @@ void sub_server( int sd ) {
   int HOME;
   bool INVALID = false;
   char buffer[MESSAGE_BUFFER_SIZE];
-
+  char home[MESSAGE_BUFFER_SIZE];
+  strcpy(home, "New project[0]\tMy projects[1]");
   pid = getpid();
   
   /* RETRIEVE USERNAME */
@@ -45,7 +46,7 @@ void sub_server( int sd ) {
 
   /* OPEN HOME */
   HOME = 999;
-  strcpy(buffer, "New project[0]\tMy projects[1]");
+  strcpy(buffer, home);
   write(sd, buffer, sizeof(buffer));
 
   while (read( sd, buffer, sizeof(buffer) )) {
@@ -63,7 +64,8 @@ void sub_server( int sd ) {
       new_proj(new_proj_name);
 
       printf("[SERVER %d] new project [%s] created by [%s]\n",pid, new_proj_name, username);
-      strcpy(buffer, "Project created.");
+      //      strcpy(buffer, "Project created.");
+      sprintf(buffer, "Project created.\n%s", home);
       HOME = 999;
     }
 
@@ -90,9 +92,11 @@ int home_process( char* buffer ){
 }
 
 void new_proj( char* buffer ){
-  printf("new_proj: buffer: %s\n", buffer);
   char cmd[1000];
-  char** argv;
+  char* argv[10];
+  
+  printf("new_proj: buffer: %s\n", buffer);
+  
   sprintf(cmd, "mkdir projects/%s", buffer);
   parse(cmd, argv);
   execute(argv);
