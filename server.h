@@ -18,6 +18,9 @@ typedef int bool;
 #define true 1
 #define false 0
 
-bool home_process( char* );
+int home_process( char* );
+void new_proj( char* );
+void parse( char*, char** );
+void execute( char** );
 
 #endif
