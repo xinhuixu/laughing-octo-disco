@@ -219,12 +219,27 @@ void view_proj( char* buffer, char* username){
     if (strcmp(i, buffer) == 0) {
       sprintf(buffer, "view_proj: %s", i);
       printf("view_proj: strcmp==0, i: %s, buffer: %s\n", i, buffer);
+
       /* paste project content to buffer */
+
     }
   }
 }
 
+void all_tasks( char* buffer, char* username ){};
+void my_tasks( char* buffer, char* username ){};
+
+bool is_manager( char* username) {};
+void add_task( char* buffer, char* proj_name, char* username ){};
+void remove_task( char* proj_name, char* username ){};
+void remove_member( char* to_rem ){};
+void add_member( char* new_member ){};
+
+void mark( char* buffer ){};
+
+
 /* borrowed from http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html */
+/* lmao were not using this probably*/
 
 void parse_exec(char* cmd, char** argv){
   parse(cmd, argv);
