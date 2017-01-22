@@ -31,6 +31,7 @@ void sub_server( int sd ) {
   int pid;
   bool USER = false;
   int HOME;
+  int PROJECTS;
   char buffer[MESSAGE_BUFFER_SIZE];
   char home[MESSAGE_BUFFER_SIZE];
   strcpy(home, "[0]New project\t[1]My projects");
@@ -56,7 +57,7 @@ void sub_server( int sd ) {
   /* READ/WRITE TO SD LOOP */
   while (read( sd, buffer, sizeof(buffer) )) {
     printf("[SERVER %d] received: %s\n", pid, buffer );
-
+    printf("HOME = %d\n",HOME);
     if (HOME == 999) {
       HOME = home_process(buffer, username);      
 
@@ -71,10 +72,14 @@ void sub_server( int sd ) {
 	sprintf(buffer, "Project already exists.\n%s", home);
       }
       HOME = 999;
-
     } else if (HOME == 1) {
       //project managing mode
-    } else if ( strcmp(buffer, "home") == 0){
+      PROJECTS = 0;
+      view_proj(buffer, username);  
+      HOME = 999;
+    }
+
+    if ( strcmp(buffer, "home") == 0){
       strcpy(buffer, home);
       HOME = 999;
     } else if ( strcmp(buffer, "exit") == 0){
@@ -110,16 +115,13 @@ bool user_exists( char* username ){
   DIR *d = NULL;
   struct dirent *de = NULL;
   d = opendir("projects");
-  
-  printf("USER DIRECTORIES:\n");
-
+  //printf("USER DIRECTORIES:\n");
   while ( (de = readdir(d)) ){
-    printf("\t%s\n",de->d_name);
+    //printf("\t%s\n",de->d_name);
     if (strcmp(de->d_name, username) == 0) {
       return true;
     }
   }
-
   closedir(d);
   return false;
 }
@@ -140,6 +142,7 @@ bool proj_exists( char* username, char* proj_name ){
 void list_projs( char* buffer, char* username ){
   DIR *d = NULL; struct dirent *de = NULL;
   char path[100];
+  int i = 1;
   sprintf(path, "projects/%s", username);  
   d = opendir(path);
   sprintf(buffer, "%s's projects:\n", username);
@@ -148,14 +151,17 @@ void list_projs( char* buffer, char* username ){
       ;
     } else {
       char *proj;
-      int proj_len = strlen(de->d_name);
-      proj = (char*)malloc(proj_len * sizeof(char));
-      sprintf(proj, "\t%s\n", de->d_name);
+      //int proj_len = strlen(de->d_name);
+      proj = (char*)malloc(50 * sizeof(char));
+      sprintf(proj, "\t[%d]%s\n", i, de->d_name);
 
       strcat(buffer, proj);
       free(proj);
+      i++;
     }
   }
+  strcat(buffer, "Enter project number to view/edit.");
+  
 }
 
 void new_proj( char* new_proj_name, char* username ){
@@ -181,6 +187,41 @@ void new_proj( char* new_proj_name, char* username ){
   printf("opened tasks\n");
   close(tasks);
   
+}
+
+int count_projs( char* username ){
+  DIR *d = NULL; struct dirent *de = NULL;
+  char path[100];
+  int i = 0;
+  sprintf(path, "projects/%s", username);  
+  d = opendir(path);  
+  while ( (de = readdir(d)) ){
+    if ( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
+      ;
+    } else {
+      i++;
+    }
+  }
+  return i;
+}
+
+void view_proj( char* buffer, char* username){
+  
+  int num_projs;
+  num_projs = count_projs(username);
+  printf("view_proj: num_projs: %d\n", num_projs);
+  
+  char i[4];
+  
+  while (num_projs){
+    sprintf(i, "%d", num_projs--);
+    printf("view_proj: i: %s, buffer: %s\n", i, buffer);
+    if (strcmp(i, buffer) == 0) {
+      sprintf(buffer, "view_proj: %s", i);
+      printf("view_proj: strcmp==0, i: %s, buffer: %s\n", i, buffer);
+      /* paste project content to buffer */
+    }
+  }
 }
 
 /* borrowed from http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html */
