@@ -1,21 +1,25 @@
-all: server.exe client.exe
+all: server client
 
-server.exe: server.o networking.o
-	gcc -o server.exe server.o networking.o
+server: server.o networking.o func.o
+	gcc -o server server.o networking.o func.o -Wall
 
-client.exe: client.o networking.o
-	gcc -o client.exe client.o networking.o
+client: client.o networking.o
+	gcc -o client client.o networking.o
 
-server.o: server.c networking.h
-	gcc -c server.c
+server.o: server.c networking.h func.h
+	gcc -o server.o -c server.c
 
-client.o: client.c networking.h
-	gcc -c client.c
+client.o: client.c networking.h 
+	gcc -o client.o -c client.c
 
 networking.o: networking.c networking.h
-	gcc -c networking.c
+	gcc -o networking.o -c networking.c
+
+func.o: func.c func.h
+	gcc -o func.o -c func.c
 
 clean:
 	rm *.o
-	rm *.exe
+	rm server
+	rm client
 	rm *~
