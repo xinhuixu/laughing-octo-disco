@@ -33,25 +33,27 @@ void sub_server( int sd ) {
   int HOME;
   char buffer[MESSAGE_BUFFER_SIZE];
   char home[MESSAGE_BUFFER_SIZE];
-  strcpy(home, "New project[0]\tMy projects[1]");
+  strcpy(home, "[0]New project\t[1]My projects");
   pid = getpid();
   
   /* RETRIEVE USERNAME */
   char username[MESSAGE_BUFFER_SIZE];
   read( sd, username, sizeof(username) );
-  printf("[SERVER %d] new login: %s\n", pid, username);
+  printf("[SERVER %d] new login [%s]\n", pid, username);
 
   if ( user_exists(username) ){
     USER = true;
   } else {
     create_user(username);
+    USER = true;
   }
     
   /* OPEN HOME */
   HOME = 999;
   strcpy(buffer, home);
   write(sd, buffer, sizeof(buffer));
-  
+
+  /* READ/WRITE TO SD LOOP */
   while (read( sd, buffer, sizeof(buffer) )) {
     printf("[SERVER %d] received: %s\n", pid, buffer );
 
@@ -91,7 +93,7 @@ int home_process( char* buffer, char* username ){
     list_projs(buffer, username);
     return 1;
   } else {
-    strcpy(buffer, "Invalid command.\nNew project[0]\tMy projects[1]");
+    strcpy(buffer, "Invalid command.\n[0]New project\t[1]My projects");
     return 999;
   }
 }
@@ -117,10 +119,7 @@ bool user_exists( char* username ){
       return true;
     }
   }
-  /*  printf("FILES:\n");
-  while (de = readdir(d)){
-    printf("\t%s\n",de->d_name);
-    }*/
+
   closedir(d);
   return false;
 }
@@ -143,15 +142,18 @@ void list_projs( char* buffer, char* username ){
   char path[100];
   sprintf(path, "projects/%s", username);  
   d = opendir(path);
-  sprintf(buffer, "%s' projects:\n", username);
+  sprintf(buffer, "%s's projects:\n", username);
   while ( (de = readdir(d)) ){
     if ( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
       ;
     } else {
-      //      sprintf(buffer, "\t%s\n", de->d_name);
-      strcat(buffer, "\t");
-      strcat(buffer, de->d_name);
-      strcat(buffer, "\n");
+      char *proj;
+      int proj_len = strlen(de->d_name);
+      proj = (char*)malloc(proj_len * sizeof(char));
+      sprintf(proj, "\t%s\n", de->d_name);
+
+      strcat(buffer, proj);
+      free(proj);
     }
   }
 }
