@@ -56,7 +56,7 @@ void sub_server( int sd ) {
     printf("[SERVER %d] received: %s\n", pid, buffer );
 
     if (HOME == 999) {
-      HOME = home_process(buffer);      
+      HOME = home_process(buffer, username);      
 
     } else if (HOME == 0) {      
       char new_proj_name[MESSAGE_BUFFER_SIZE];
@@ -69,7 +69,9 @@ void sub_server( int sd ) {
 	sprintf(buffer, "Project already exists.\n%s", home);
       }
       HOME = 999;
-      
+
+    } else if (HOME == 1) {
+      //project managing mode
     } else if ( strcmp(buffer, "home") == 0){
       strcpy(buffer, home);
       HOME = 999;
@@ -81,13 +83,12 @@ void sub_server( int sd ) {
   }
 }
 
-int home_process( char* buffer ){
+int home_process( char* buffer, char* username ){
   if ( strcmp(buffer, "0") == 0 ){
     strcpy(buffer, "Enter title of new project:");
     return 0;
   } else if ( strcmp(buffer, "1") == 0) {
-    //my_proj();
-    strcpy(buffer, "[placeholder] List of projects");
+    list_projs(buffer, username);
     return 1;
   } else {
     strcpy(buffer, "Invalid command.\nNew project[0]\tMy projects[1]");
@@ -131,11 +132,28 @@ bool proj_exists( char* username, char* proj_name ){
   d = opendir(path);
   printf("%s's projects:\n", username);
   while ( (de = readdir(d)) ){
-      printf("\t%s\n", de->d_name);
       if (strcmp(de->d_name, proj_name) == 0)
 	return true;    
   }
   return false;
+}
+
+void list_projs( char* buffer, char* username ){
+  DIR *d = NULL; struct dirent *de = NULL;
+  char path[100];
+  sprintf(path, "projects/%s", username);  
+  d = opendir(path);
+  sprintf(buffer, "%s' projects:\n", username);
+  while ( (de = readdir(d)) ){
+    if ( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
+      ;
+    } else {
+      //      sprintf(buffer, "\t%s\n", de->d_name);
+      strcat(buffer, "\t");
+      strcat(buffer, de->d_name);
+      strcat(buffer, "\n");
+    }
+  }
 }
 
 void new_proj( char* new_proj_name, char* username ){

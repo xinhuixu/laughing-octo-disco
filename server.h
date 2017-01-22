@@ -18,12 +18,13 @@ typedef int bool;
 #define true 1
 #define false 0
 
-int home_process( char* );
+int home_process( char*, char* );
 void new_proj( char*, char* );
 void parse( char*, char** );
 void execute( char** );
 bool user_exists( char* );
 bool proj_exists( char*, char* );
 void create_user( char* );
+void list_projs( char* , char*);
 
 #endif
