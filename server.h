@@ -23,6 +23,7 @@ void new_proj( char*, char* );
 void parse( char*, char** );
 void execute( char** );
 bool user_exists( char* );
+bool proj_exists( char*, char* );
 void create_user( char* );
 
 #endif

@@ -31,7 +31,6 @@ void sub_server( int sd ) {
   int pid;
   bool USER = false;
   int HOME;
-  bool INVALID = false;
   char buffer[MESSAGE_BUFFER_SIZE];
   char home[MESSAGE_BUFFER_SIZE];
   strcpy(home, "New project[0]\tMy projects[1]");
@@ -62,11 +61,13 @@ void sub_server( int sd ) {
     } else if (HOME == 0) {      
       char new_proj_name[MESSAGE_BUFFER_SIZE];
       strcpy(new_proj_name, buffer);
-      if (USER) {
+      if (USER && !proj_exists(username, new_proj_name)) {
 	new_proj(new_proj_name, username);
+	printf("[SERVER %d] new project [%s] created by [%s]\n",pid, new_proj_name, username);
+	sprintf(buffer, "Project created.\n%s", home);
+      } else {
+	sprintf(buffer, "Project already exists.\n%s", home);
       }
-      printf("[SERVER %d] new project [%s] created by [%s]\n",pid, new_proj_name, username);
-      sprintf(buffer, "Project created.\n%s", home);
       HOME = 999;
       
     } else if ( strcmp(buffer, "home") == 0){
@@ -92,11 +93,6 @@ int home_process( char* buffer ){
     strcpy(buffer, "Invalid command.\nNew project[0]\tMy projects[1]");
     return 999;
   }
-}
-
-void parse_exec(char* cmd, char** argv){
-  parse(cmd, argv);
-  execute(argv);
 }
 
 void create_user( char* username ){
@@ -128,6 +124,20 @@ bool user_exists( char* username ){
   return false;
 }
 
+bool proj_exists( char* username, char* proj_name ){
+  DIR *d = NULL; struct dirent *de = NULL;
+  char path[100];
+  sprintf(path, "projects/%s", username);  
+  d = opendir(path);
+  printf("%s's projects:\n", username);
+  while ( (de = readdir(d)) ){
+      printf("\t%s\n", de->d_name);
+      if (strcmp(de->d_name, proj_name) == 0)
+	return true;    
+  }
+  return false;
+}
+
 void new_proj( char* new_proj_name, char* username ){
   char cmd[1000];
   char* argv[10];
@@ -138,8 +148,6 @@ void new_proj( char* new_proj_name, char* username ){
   if (err)
     printf("new_proj: mkdir failed.\n");
 
-  
-  
   sprintf(path, "projects/%s/%s/members.csv", username, new_proj_name);
   
   int members = open(path, O_CREAT|O_RDWR, 0777);
@@ -156,6 +164,12 @@ void new_proj( char* new_proj_name, char* username ){
 }
 
 /* borrowed from http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html */
+
+void parse_exec(char* cmd, char** argv){
+  parse(cmd, argv);
+  execute(argv);
+}
+
 void  parse(char *line, char **argv){
   while (*line != '\0') {       /* if not the end of line ....... */ 
     while (*line == ' ' || *line == '\t' || *line == '\n')
