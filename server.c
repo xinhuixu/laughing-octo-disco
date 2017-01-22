@@ -1,13 +1,12 @@
 #include "server.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include <dirent.h>
+#include <sys/stat.h>
 
 #include "networking.h"
 
 void process( char * s );
 void sub_server( int sd );
+
 
 int main() {
   int sd, connection;
@@ -30,7 +29,7 @@ int main() {
 
 void sub_server( int sd ) {
   int pid;
-  bool USERNAME_SET = false;
+  bool USER = false;
   int HOME;
   bool INVALID = false;
   char buffer[MESSAGE_BUFFER_SIZE];
@@ -42,65 +41,118 @@ void sub_server( int sd ) {
   char username[MESSAGE_BUFFER_SIZE];
   read( sd, username, sizeof(username) );
   printf("[SERVER %d] new login: %s\n", pid, username);
-  USERNAME_SET = true;
 
+  if ( user_exists(username) ){
+    USER = true;
+  } else {
+    create_user(username);
+  }
+    
   /* OPEN HOME */
   HOME = 999;
   strcpy(buffer, home);
   write(sd, buffer, sizeof(buffer));
-
+  
   while (read( sd, buffer, sizeof(buffer) )) {
-
     printf("[SERVER %d] received: %s\n", pid, buffer );
 
     if (HOME == 999) {
-      printf("HOME = %d\n", HOME);
-      HOME = home_process(buffer);
-      
-    } else if (HOME == 0) {
-      
+      HOME = home_process(buffer);      
+
+    } else if (HOME == 0) {      
       char new_proj_name[MESSAGE_BUFFER_SIZE];
       strcpy(new_proj_name, buffer);
-      new_proj(new_proj_name);
-
+      if (USER) {
+	new_proj(new_proj_name, username);
+      }
       printf("[SERVER %d] new project [%s] created by [%s]\n",pid, new_proj_name, username);
-      //      strcpy(buffer, "Project created.");
       sprintf(buffer, "Project created.\n%s", home);
       HOME = 999;
+      
+    } else if ( strcmp(buffer, "home") == 0){
+      strcpy(buffer, home);
+      HOME = 999;
+    } else if ( strcmp(buffer, "exit") == 0){
+      exit(0);
     }
 
     write(sd, buffer, sizeof(buffer));
   }
 }
+
 int home_process( char* buffer ){
-  
   if ( strcmp(buffer, "0") == 0 ){
-    printf("home_process(0)\n");
     strcpy(buffer, "Enter title of new project:");
     return 0;
-  }
-  else if ( strcmp(buffer, "1") == 0) {
+  } else if ( strcmp(buffer, "1") == 0) {
     //my_proj();
     strcpy(buffer, "[placeholder] List of projects");
     return 1;
-  }
-  else {
-    strcpy(buffer, "New project[0]\tMy projects[1]\nInvalid command.");
+  } else {
+    strcpy(buffer, "Invalid command.\nNew project[0]\tMy projects[1]");
     return 999;
   }
-
 }
 
-void new_proj( char* buffer ){
-  char cmd[1000];
-  char* argv[10];
-  
-  printf("new_proj: buffer: %s\n", buffer);
-  
-  sprintf(cmd, "mkdir projects/%s", buffer);
+void parse_exec(char* cmd, char** argv){
   parse(cmd, argv);
   execute(argv);
-  printf("executed argv\n");
+}
+
+void create_user( char* username ){
+  char user_dir[100];
+  sprintf(user_dir, "projects/%s", username);
+  int err = mkdir(user_dir, 0700);
+  if (err)
+    perror("create_user: mkdir failed.\n");
+}
+
+bool user_exists( char* username ){
+  DIR *d = NULL;
+  struct dirent *de = NULL;
+  d = opendir("projects");
+  
+  printf("USER DIRECTORIES:\n");
+
+  while ( (de = readdir(d)) ){
+    printf("\t%s\n",de->d_name);
+    if (strcmp(de->d_name, username) == 0) {
+      return true;
+    }
+  }
+  /*  printf("FILES:\n");
+  while (de = readdir(d)){
+    printf("\t%s\n",de->d_name);
+    }*/
+  closedir(d);
+  return false;
+}
+
+void new_proj( char* new_proj_name, char* username ){
+  char cmd[1000];
+  char* argv[10];
+  char path[100];
+
+  sprintf(path, "projects/%s/%s", username, new_proj_name);
+  int err = mkdir(path, 0700);
+  if (err)
+    printf("new_proj: mkdir failed.\n");
+
+  
+  
+  sprintf(path, "projects/%s/%s/members.csv", username, new_proj_name);
+  
+  int members = open(path, O_CREAT|O_RDWR, 0777);
+  printf("opened members: %d, path: %s\n", members, path);
+  write(members, username, sizeof(username));
+  write(members, "\n", sizeof(char));
+  close(members);
+
+  sprintf(path, "projects/%s/%s/tasks.csv", username, new_proj_name);
+  int tasks = open(path, O_CREAT|O_RDWR, 0777);
+  printf("opened tasks\n");
+  close(tasks);
+  
 }
 
 /* borrowed from http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html */

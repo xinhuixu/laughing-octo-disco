@@ -19,8 +19,10 @@ typedef int bool;
 #define false 0
 
 int home_process( char* );
-void new_proj( char* );
+void new_proj( char*, char* );
 void parse( char*, char** );
 void execute( char** );
+bool user_exists( char* );
+void create_user( char* );
 
 #endif
