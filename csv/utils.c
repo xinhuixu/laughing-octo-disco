@@ -97,7 +97,7 @@ int edit_dline(char arr[100][4][1024], char *uname, char *task, char *newdline, 
 	for(k=0; k<strlen(newdline+1); k++, newdline++) {
 	  strcpy(&arr[i][2][k], newdline);
 	}
-	//write_to_file("tasks.txt", arr, rows, cols);
+	write_to_file("tasks.txt", arr, rows, cols);
         return 1;
       }
     }
@@ -115,7 +115,7 @@ int edit_status(char arr[100][4][1024], char *uname, char *task, char *newstat, 
 	for(k=0; k<strlen(newstat+1); k++, newstat++) {
 	  strcpy(&arr[i][3][k], newstat);
 	}
-	//write_to_file("tasks.txt", arr, rows, cols);
+	write_to_file("tasks.txt", arr, rows, cols);
         return 1;
       }
     }
@@ -126,7 +126,7 @@ int edit_status(char arr[100][4][1024], char *uname, char *task, char *newstat, 
 
 int remove_row(char arr[100][4][1024], char *uname, char *task, int rows, int cols) {
 
-  int i=0,j=0;
+  int i=0, j=0;
   int start=0;
   for(i=0; i<rows; i++) {
     if( strncmp(arr[i][0], uname, strlen(uname)) == 0 ) {
@@ -141,11 +141,12 @@ int remove_row(char arr[100][4][1024], char *uname, char *task, int rows, int co
     }
   }
   rows--;
-  //write_to_file("tasks.txt", arr, rows, cols);
+  write_to_file("tasks.txt", arr, rows, cols);
   
   return rows;
 }
 
+//for testing ONLY
 void print_arr(char arr[100][4][1024], int rows, int cols) {
   int i=0, j=0;
   for(i=0; i<rows; i++) {
@@ -157,11 +158,10 @@ void print_arr(char arr[100][4][1024], int rows, int cols) {
 }
   
 void write_to_file(char *filename, char arr[100][4][1024], int rows, int cols) {
-  
-  remove(filename);
 
-  char *write;
+  char write[rows*cols*1024];
   write[0] = 0;
+  
   int i=0, j=0, k=0;
   for(i=0; i<rows; i++) {
     for(j=0; j<cols-1; j++) {
@@ -175,8 +175,9 @@ void write_to_file(char *filename, char arr[100][4][1024], int rows, int cols) {
     j=0;
   }
   
+  remove(filename);
   FILE *fd = fopen(filename, "w");
-  fwrite(write, (int)(strlen(write) / sizeof(write)) + 1, sizeof(write), fd);
+  fprintf(fd, "%s", write);
   fclose(fd);
   
 }
@@ -185,31 +186,27 @@ int main() {
   char arr[100][4][1024]; //array!
   int i=0,j=0; int cols=4,rows=0;
 
-  printf("INIT FILE:\n");
   rows = parse_csv("tasks.txt", arr);
-  print_arr(arr, rows, cols);
   
-  printf("ADDING ROW:\n");
+  printf("ADDING ROW...\n");
   char *uname = "Jefff_star";
   char *task = "eat a sandwich";
   char *dline = "01/31/17 1900";
   char *stat = "In progress";
   rows = add_row(arr, uname, task, dline, stat, rows, cols);
-  print_arr(arr, rows, cols);
-
-  printf("EDITING DEADLINE:\n");
+  
+  printf("EDITING DEADLINE...\n");
   char *newdline = "01/31/17 1930";
   if(edit_dline(arr, uname, task, newdline, rows, cols))
-    print_arr(arr, rows, cols);
-
-  printf("EDITING STATUS:\n");
+  
+  printf("EDITING STATUS...\n");
   char *newstat = "Complete";
   if(edit_status(arr, uname, task, newstat, rows, cols))
-    print_arr(arr, rows, cols);
   
-  printf("REMOVING ROW:\n");
+  printf("REMOVING ROW...\n");
+  strcpy(uname, "joanne99");
+  strcpy(task, "wash the dishes");
   rows = remove_row(arr, uname, task, rows, cols);
-  print_arr(arr, rows, cols);
   
   return 0;
 }
