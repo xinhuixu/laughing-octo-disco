@@ -1,3 +1,6 @@
+#ifndef _UTILS_H
+#define _UTILS_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,3 +20,5 @@ int remove_row(char *filename, char arr[100][4][1024], char *uname, char *task, 
 void print_arr(char arr[1024][4][1024], int rows, int cols);
 void print_file(char *filename, int rows, int cols);
 void write_to_file(char *filename, char arr[100][4][1024], int rows, int cols);
+
+#endif
