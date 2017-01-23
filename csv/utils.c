@@ -141,7 +141,7 @@ int remove_row(char arr[100][4][1024], char *uname, char *task, int rows, int co
     }
   }
   rows--;
-  write_to_file("tasks.txt", arr, rows, cols);
+  //write_to_file("tasks.txt", arr, rows, cols);
   
   return rows;
 }
@@ -209,6 +209,7 @@ int main() {
   
   printf("REMOVING ROW:\n");
   rows = remove_row(arr, uname, task, rows, cols);
+  print_arr(arr, rows, cols);
   
   return 0;
 }
