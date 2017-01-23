@@ -75,8 +75,6 @@ void list_projs( char* buffer, char* username ){
 }
 
 void new_proj( char* new_proj_name, char* username ){
-  char cmd[1000];
-  char* argv[10];
   char path[100];
 
   sprintf(path, "projects/%s/%s", username, new_proj_name);
@@ -127,14 +125,18 @@ void view_proj( char* buffer, char* username){
     sprintf(i, "%d", num_projs--);
     //printf("view_proj: i: %s, buffer: %s\n", i, buffer);
     if (strcmp(i, buffer) == 0) {
-      sprintf(buffer, "view_proj: %s", i);
-      //printf("view_proj: strcmp==0, i: %s, buffer: %s\n", i, buffer);
+      sprintf(buffer, "view_proj: %s\n", i);
       
       /*TODO: paste project content to buffer */
 
+      strcat(buffer,"[0]All tasks\t[1]My tasks\t[2]Add member\t[3]New task");
+      
       valid = true;
+      break;
     }
   }
+  if (strcmp(buffer, "home") == 0)
+    valid = true;
   
   if (!valid){
     char projs[1000];
@@ -143,16 +145,31 @@ void view_proj( char* buffer, char* username){
   }
 }
 
-void all_tasks( char* buffer, char* username ){};
-void my_tasks( char* buffer, char* username ){};
+void all_tasks( char* buffer, char* username ){
+}
+void my_tasks( char* buffer, char* username ){
+}
 
-bool is_manager( char* username) {};
-void add_task( char* buffer, char* proj_name, char* username ){};
-void remove_task( char* proj_name, char* username ){};
-void remove_member( char* to_rem ){};
-void add_member( char* new_member ){};
+bool is_manager( char* username, char* proj_name ) {
+  char path[100];
+  sprintf(path, "projects/%s/%s/members.csv", username, proj_name);  
+  FILE * members = fopen(path, "r");  
+  char buf[20];  
+  fgets(buf, 20, members); //fgets reads until first newline
+  if (strcmp(buf, username) == 0){
+    fclose(members);
+    return true;
+  }
+  fclose(members);
+  return false;
+}
+ 
+void add_task( char* buffer, char* proj_name, char* username );
+void remove_task( char* proj_name, char* username );
+void remove_member( char* to_rem );
+void add_member( char* new_member );
 
-void mark( char* buffer ){};
+void mark( char* buffer );
 
 
 /* borrowed from http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html */
