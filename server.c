@@ -96,11 +96,14 @@ void sub_server( int sd ) {
       /*PROJECT MANAGING LOOP*/
     } else if (HOME == 1) {
       if (PROJECT == -1) {
+	//paste all projs into buffer, set PROJECT
 	PROJECT = view_proj(buffer, username);
-      } else {
-	proj_process(buffer, PROJECT, username);
+      } else if (PROJECT){
+	PROJECT = proj_process(buffer, PROJECT, username);
+      } else if (PROJECT = 2){
+
       }
-      
+    }
     } else if ( strcmp(buffer, "exit") == 0){
       exit(0);
     }

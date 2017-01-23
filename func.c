@@ -13,7 +13,10 @@
 #include <dirent.h>
 
 #include "func.h"
+<<<<<<< HEAD
 #include "utils.c"
+=======
+>>>>>>> 8a0075eea5ea96a9f4438a2d18e4c73524ca9209
 
 int home_process( char* buffer, char* username ){
   if ( strcmp(buffer, "0") == 0 ){
@@ -57,6 +60,7 @@ bool proj_exists( char* username, char* proj_name ){
   sprintf(path, "projects/%s", username);  
   d = opendir(path);
   //printf("%s's projects:\n", username);
+  //TODO: CHECK ALL PROJECTS//
   while ( (de = readdir(d)) ){
       if (strcmp(de->d_name, proj_name) == 0)
 	return true;    
@@ -245,24 +249,40 @@ int proj_process( char* buffer, int proj_num, char* username ){
   return -1;
 }
 
+/*get_manager(manager, project name)
+populate manager with the manager of the project*/
+void get_manager( char* manager, char* proj_name ){
+
+
+
+}
+
 bool is_manager( char* username, char* proj_name ) {
   char path[100];
   sprintf(path, "projects/%s/%s/members.csv", username, proj_name);  
   FILE * members = fopen(path, "r");  
-  char buf[20];  
+
+  if (errno)
+    return false;
+  else
+    return true;
+  
+  /*char buf[20];  
   fgets(buf, 20, members); //fgets reads until first newline
   if (strcmp(buf, username) == 0){
     fclose(members);
     return true;
   }
   fclose(members);
-  return false;
+  return false;*/
 }
 
 void all_tasks( char* buffer, char* username );
 void my_tasks( char* buffer, char* username );
 void add_task( char* buffer, char* proj_name, char* username );
+
 void remove_task( char* proj_name, char* username, char* buffer );
+
 void remove_member( char* to_rem );
 void add_member( char* new_member );
 void update_status( char* buffer );
