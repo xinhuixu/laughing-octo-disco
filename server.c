@@ -91,7 +91,7 @@ void sub_server( int sd ) {
       //project managing mode
       PROJECTS = 0;
       view_proj(buffer, username);  
-      HOME = 999;
+      //HOME = 999;
     }
 
     if ( strcmp(buffer, "home") == 0){
