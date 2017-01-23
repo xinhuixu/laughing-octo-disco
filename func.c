@@ -67,45 +67,46 @@ bool proj_exists( char* username, char* proj_name ){
 
 void list_projs( char* buffer, char* username ){
   DIR *d = NULL; struct dirent *de = NULL;
+  DIR *sub = NULL; struct dirent *subde = NULL;
   char path[100];
+  char *proj; proj = (char *)malloc(50 * sizeof(char));
   int i = 1;
 
-  //THIS DOESN'T WORK
-  
   sprintf(path, "projects");
   d = opendir(path);
-  DIR *sub = NULL; struct dirent *subde = NULL;
   while( (de = readdir(d)) ) {
-    sprintf(path, "projects/%s", de->d_name);
-    sub = opendir(path);
-    sprintf(buffer, "%s's projects:\n", de->d_name);
-    if ( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
-      ;
-    } else if ( (strncmp(de->d_name, username, strlen(username)) == 0) ) {
-      char *proj;
-      //int proj_len = strlen(de->d_name);
-      proj = (char*)malloc(50 * sizeof(char));
-      sprintf(proj, "\t[%d]%s\n", i, de->d_name);
+    printf("de->d_name: %s\n", de->d_name);
+    if( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
+      
+      printf("now i am here\n");
+    }
+    else if( (strcmp(de->d_name, username) == 0) ) {
+      printf("hit my own folder!\n");
+      sprintf(proj, "\t[%d\%s\n", i, de->d_name);
       strcat(buffer, proj);
       free(proj);
-      
       i++;
-    } else {
+    }
+    else {
+      printf("hit someone else's folder!");
+      printf("subde->d_name: %s\n", subde->d_name);
       while( (subde = readdir(sub)) ) {
-	if ( (strcmp(subde->d_name, ".") == 0) ||
-	     (strcmp(subde->d_name, "..") == 0) ) {
-	  sprintf(path, "projects/%s/%s/members.csv", de->d_name, subde->d_name);
+	if( (strcmp(subde->d_name, ".") == 0) || (strcmp(subde->d_name, "..") == 0) ) {
+	  ;
+	}
+	else {
+	  sprintf(path, "projects/%s/%s/members.csv", de->d_name,subde->d_name);
 	  printf("path: %s\n", path);
 	  char arr[100][4][1024];
 	  int cols=1, rows=parse_csv(path, arr); int r=0, c=0;
 	  for(r=0; r<rows; r++) {
 	    for(c=0; c<cols; c++) {
-	      if(strncmp(username, arr[r][c], strlen(username)) == 0) {
+	      if( strncmp(username, arr[r][c], strlen(username)) == 0 ) {
 		char *proj;
 		sprintf(proj, "\t[%d]%s\n", i, subde->d_name);
 		strcat(buffer, proj);
 		free(proj);
-		
+
 		i++;
 	      }
 	    }
@@ -114,6 +115,7 @@ void list_projs( char* buffer, char* username ){
       }
     }
   }
+    
   
   strcat(buffer, "Enter project number to view/edit.");
 
