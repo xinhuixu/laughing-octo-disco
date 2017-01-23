@@ -3,9 +3,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/uio.h>
-#include <fcntl.h>
+#include <sys/stat.h>
 
 int parse_csv(char *filename, char arr[100][4][1024]);
 int add_row(char arr[100][4][1024], char *uname, char *task, char *dline, char *stat, int rows, int cols);
