@@ -41,7 +41,7 @@ bool proj_exists( char* username, char* proj_name ){
   char path[100];
   sprintf(path, "projects/%s", username);  
   d = opendir(path);
-  printf("%s's projects:\n", username);
+  //printf("%s's projects:\n", username);
   while ( (de = readdir(d)) ){
       if (strcmp(de->d_name, proj_name) == 0)
 	return true;    
@@ -87,14 +87,14 @@ void new_proj( char* new_proj_name, char* username ){
   sprintf(path, "projects/%s/%s/members.csv", username, new_proj_name);
   
   int members = open(path, O_CREAT|O_RDWR, 0777);
-  printf("opened members: %d, path: %s\n", members, path);
+  //printf("opened members: %d, path: %s\n", members, path);
   write(members, username, sizeof(username));
   write(members, "\n", sizeof(char));
   close(members);
 
   sprintf(path, "projects/%s/%s/tasks.csv", username, new_proj_name);
   int tasks = open(path, O_CREAT|O_RDWR, 0777);
-  printf("opened tasks\n");
+  //printf("opened tasks\n");
   close(tasks);
   
 }
@@ -116,7 +116,7 @@ int count_projs( char* username ){
 }
 
 void view_proj( char* buffer, char* username){
-  
+  bool valid;
   int num_projs;
   num_projs = count_projs(username);
   printf("view_proj: num_projs: %d\n", num_projs);
@@ -125,14 +125,21 @@ void view_proj( char* buffer, char* username){
   
   while (num_projs){
     sprintf(i, "%d", num_projs--);
-    printf("view_proj: i: %s, buffer: %s\n", i, buffer);
+    //printf("view_proj: i: %s, buffer: %s\n", i, buffer);
     if (strcmp(i, buffer) == 0) {
       sprintf(buffer, "view_proj: %s", i);
-      printf("view_proj: strcmp==0, i: %s, buffer: %s\n", i, buffer);
+      //printf("view_proj: strcmp==0, i: %s, buffer: %s\n", i, buffer);
+      
+      /*TODO: paste project content to buffer */
 
-      /* paste project content to buffer */
-
+      valid = true;
     }
+  }
+  
+  if (!valid){
+    char projs[1000];
+    list_projs(projs, username);
+    sprintf(buffer, "Invalid command.\n%s", projs);
   }
 }
 
