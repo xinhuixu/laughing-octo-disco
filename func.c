@@ -238,12 +238,12 @@ bool is_manager( char* username, char* proj_name ) {
 void all_tasks( char* buffer, char* username );
 void my_tasks( char* buffer, char* username );
 void add_task( char* buffer, char* proj_name, char* username );
-void remove_task( char* proj_name, char* username );
+
+void remove_task( char* proj_name, char* username, char* buffer );
+
 void remove_member( char* to_rem );
 void add_member( char* new_member );
-
-void mark( char* buffer );
-
+void update_status( char* buffer );
 
 /* borrowed from http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html */
 /* lmao were not using this probably*/
