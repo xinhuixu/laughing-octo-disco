@@ -98,7 +98,7 @@ void sub_server( int sd ) {
       if (PROJECT == -1) {
 	PROJECT = view_proj(buffer, username);
       } else {
-	proj_process(buffer, username);
+	proj_process(buffer, PROJECT, username);
       }
       
     } else if ( strcmp(buffer, "exit") == 0){

@@ -179,17 +179,31 @@ int view_proj( char* buffer, char* username){
   }
 }
 
-void proj_process( char* buffer, char* username ){
+int proj_process( char* buffer, int proj_num, char* username ){
   if (strcmp(buffer, "0") == 0){
     /*TODO: PASTE ALL TASKS INTO BUFFER*/
+    return 0;
   } else if (strcmp(buffer, "1") == 0){
     /*TODO: PASTE THIS username'S TASKS INTO BUFFER*/
+    return 1;
   } else if (strcmp(buffer, "2") == 0){
     /*TODO: add member, prompt for new member name, manager only*/
+    char proj[100];
+    char num[4]; sprintf(num, "%d", proj_num);
+    get_proj_name(proj, username, num);
+    if (is_manager(username, proj)){
+      sprintf(buffer, "Enter username of new member in [%s]:", proj);
+      return 2;
+    } else {
+      sprintf(buffer, "You are not authorized to use this command.");
+      return -1;
+    }
+    
   } else if (strcmp(buffer, "3") == 0){
     /*TODO: new task, manager only*/
   }
 
+  return -1;
 }
 
 bool is_manager( char* username, char* proj_name ) {
@@ -224,7 +238,7 @@ void parse_exec(char* cmd, char** argv){
   execute(argv);
 }
 
-void  parse(char *line, char **argv){
+void parse(char *line, char **argv){
   while (*line != '\0') {       /* if not the end of line ....... */ 
     while (*line == ' ' || *line == '\t' || *line == '\n')
       *line++ = '\0';     /* replace white spaces with 0    */

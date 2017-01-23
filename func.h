@@ -32,4 +32,5 @@ int view_proj( char*, char* );
 int count_projs( char* );
 bool is_manager( char*, char* );
 void get_proj_name( char*, char*, char* );
+int proj_process(char*, int, char* );
 #endif
