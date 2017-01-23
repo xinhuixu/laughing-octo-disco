@@ -90,11 +90,13 @@ int add_helper(char add[4][1024], char arr[100][4][1024], int rows, int cols) {
 
 int edit_dline(char arr[100][4][1024], char *uname, char *task, char *newdline, int rows, int cols) {
 
-  int i=0, j=0;
+  int i=0, j=0, k=0;
   for(i=0; i<rows; i++) {
     if( strncmp(arr[i][0], uname, strlen(uname)) == 0 ) {
       if( strncmp(arr[i][1], task, strlen(task)) == 0 ) {
-	strcpy(arr[i][2], newdline);
+	for(k=0; k<strlen(newdline+1); k++, newdline++) {
+	  strcpy(&arr[i][2][k], newdline);
+	}
 	//write_to_file("tasks.txt", arr, rows, cols);
         return 1;
       }
@@ -106,11 +108,13 @@ int edit_dline(char arr[100][4][1024], char *uname, char *task, char *newdline, 
 
 int edit_status(char arr[100][4][1024], char *uname, char *task, char *newstat, int rows, int cols) {
 
-  int i=0, j=0;
+  int i=0, j=0, k=0;
   for(i=0; i<rows; i++) {
     if( strncmp(arr[i][0], uname, strlen(uname)) == 0 ) {
       if( strncmp(arr[i][1], task, strlen(task)) == 0 ) {
-	strcpy(arr[i][3], newstat);
+	for(k=0; k<strlen(newstat+1); k++, newstat++) {
+	  strcpy(&arr[i][3][k], newstat);
+	}
 	//write_to_file("tasks.txt", arr, rows, cols);
         return 1;
       }
@@ -153,7 +157,7 @@ void print_arr(char arr[100][4][1024], int rows, int cols) {
 }
   
 void write_to_file(char *filename, char arr[100][4][1024], int rows, int cols) {
-
+  
   remove(filename);
 
   char *write;
@@ -202,7 +206,7 @@ int main() {
   char *newstat = "Complete";
   if(edit_status(arr, uname, task, newstat, rows, cols))
     print_arr(arr, rows, cols);
-
+  
   printf("REMOVING ROW:\n");
   rows = remove_row(arr, uname, task, rows, cols);
   
