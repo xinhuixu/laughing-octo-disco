@@ -128,6 +128,8 @@ int remove_row(char arr[100][4][1024], char *uname, char *task, int rows, int co
 
   int i=0, j=0;
   int start=0;
+
+  printf("one\n");
   for(i=0; i<rows; i++) {
     if( strncmp(arr[i][0], uname, strlen(uname)) == 0 ) {
       if( strncmp(arr[i][1], task, strlen(task)) == 0 ) {
@@ -135,11 +137,14 @@ int remove_row(char arr[100][4][1024], char *uname, char *task, int rows, int co
       }
     }
   }
+
+  printf("two\n");
   for(i=start; i<rows; i++) {
     for(j=0; j<cols; j++) {
       strcpy(arr[i][j], arr[i+1][j]);
     }
   }
+  
   rows--;
   write_to_file("tasks.txt", arr, rows, cols);
   
@@ -189,10 +194,10 @@ int main() {
   rows = parse_csv("tasks.txt", arr);
   
   printf("ADDING ROW...\n");
-  char *uname = "Jefff_star";
-  char *task = "eat a sandwich";
-  char *dline = "01/31/17 1900";
-  char *stat = "In progress";
+  char uname[1024]; strcpy(uname, "Jefff_star");
+  char task[1024]; strcpy(task, "eat a banana");
+  char dline[1024]; strcpy(dline, "01/31/17 1900");
+  char stat[1024]; strcpy(stat, "In progress");
   rows = add_row(arr, uname, task, dline, stat, rows, cols);
   
   printf("EDITING DEADLINE...\n");
@@ -204,8 +209,7 @@ int main() {
   if(edit_status(arr, uname, task, newstat, rows, cols))
   
   printf("REMOVING ROW...\n");
-  strcpy(uname, "joanne99");
-  strcpy(task, "wash the dishes");
+  strcpy(task, "take out the trash");
   rows = remove_row(arr, uname, task, rows, cols);
   
   return 0;
