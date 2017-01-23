@@ -1,4 +1,5 @@
 #include "func.h"
+#include "utils.h"
 
 int home_process( char* buffer, char* username ){
   if ( strcmp(buffer, "0") == 0 ){
@@ -222,9 +223,49 @@ bool is_manager( char* username, char* proj_name ) {
 
 void all_tasks( char* buffer, char* username );
 void my_tasks( char* buffer, char* username );
-void add_task( char* buffer, char* proj_name, char* username );
-void remove_task( char* proj_name, char* username );
-void remove_member( char* to_rem );
+void add_task( char* buffer, char* proj_name, char* username ) {
+
+  char path[100];
+  sprintf(path, "projects/%s/%s/tasks.csv", username, proj_name);
+  char arr[100][4][1024];
+  int r = parse_csv(path, arr);
+
+  //what is *buffer?
+  /*
+  int a = add_row(path, arr, username, [task], [deadline], [status], r, 4);
+  if( a == r+1 )
+    printf("Success!\n");
+  else
+    printf("Something went wrong.\n");
+  */
+  
+}
+void remove_task( char* proj_name, char* username, char* buffer ) {
+
+  char path[100];
+  sprintf(path, "projects/%s/%s/tasks.csv", username, proj_name);
+  char arr[100][4][1024];
+  int r = parse_csv(path, arr);
+  int rem = remove_row(path, arr, username, buffer, r, 4);
+  if( rem == r-1 )
+    printf("Success!\n");
+  else
+    printf("Something went wrong.\n");
+
+}
+void remove_member( char* to_rem ) {
+
+  char path[100];
+  sprintf(path, "projects/%s/%s/members.csv", to_rem, proj_name);
+  char arr[100][4][1024];
+  int r = parse_csv(path, arr);
+  int rem = remove_row(path, arr, to_rem, "", r, 1);
+  if( rem == r-1 )
+    printf("Success!\n");
+  else
+    printf("Something went wrong.\n");
+  
+}
 void add_member( char* new_member );
 
 void mark( char* buffer );
