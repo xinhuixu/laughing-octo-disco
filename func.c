@@ -1,4 +1,5 @@
 #include "func.h"
+#include "utils.h"
 
 int home_process( char* buffer, char* username ){
   if ( strcmp(buffer, "0") == 0 ){
@@ -164,7 +165,7 @@ bool is_manager( char* username, char* proj_name ) {
   return false;
 }
  
-void add_task( char* buffer, char* proj_name, char* username );
+void add_task( char* buffer, char* proj_name, char* username )
 void remove_task( char* proj_name, char* username );
 void remove_member( char* to_rem );
 void add_member( char* new_member );
