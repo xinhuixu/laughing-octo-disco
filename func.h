@@ -1,19 +1,6 @@
 #ifndef DEFINED1
 #define DEFINED1
 
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/sem.h>
-#include <sys/shm.h>
-#include <unistd.h>
-#include <time.h>
-#include <string.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <dirent.h>
 #include "server.h"
 
 typedef int bool;

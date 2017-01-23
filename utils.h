@@ -1,16 +1,6 @@
 #ifndef _UTILS_H
 #define _UTILS_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdarg.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/uio.h>
-#include <sys/stat.h>
-
 int parse_csv(char *filename, char arr[100][4][1024]);
 int add_row(char *filename, char arr[100][4][1024], char *uname, char *task, char *dline, char *stat, int rows, int cols);
 int add_helper(char *filename, char add[4][1024], char arr[100][4][1024], int rows, int cols);

@@ -1,5 +1,19 @@
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include <sys/shm.h>
+#include <unistd.h>
+#include <time.h>
+#include <string.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <dirent.h>
+
 #include "func.h"
-#include "utils.h"
+#include "utils.c"
 
 int home_process( char* buffer, char* username ){
   if ( strcmp(buffer, "0") == 0 ){
@@ -73,7 +87,31 @@ void list_projs( char* buffer, char* username ){
     }
   }
 
-  /* TODO: traverse to all other user's projects' members.csv to find projects user participates in */
+  sprintf(path, "projects");
+  d = opendir(path);
+  DIR *sub = NULL; struct dirent *subde = NULL;
+  while( (de = readdir(d)) ) {
+    sprintf(path, "projects/%s", de->d_name);
+    sub = opendir(path);
+    sprintf(buffer, "%s's projects:\n", de->d_name);
+    while( (subde = readdir(d)) ) {
+      sprintf(path, "projects/%s/%s/members.csv", de->d_name, subde->d_name);
+      char arr[100][4][1024];
+      int cols=1, rows=parse_csv(path, arr); int r=0, c=0;
+      for(r=0; r<rows; r++) {
+	for(c=0; c<cols; c++) {
+	  if(strncmp(username, arr[r][c], strlen(username)) == 0) {
+	    char *proj;
+	    sprintf(proj, "\t[%d]%s\n", i, subde->d_name);
+	    strcat(buffer, proj);
+	    free(proj);
+
+	    i++;
+	  }
+	}
+      }
+    }
+  }
   
   strcat(buffer, "Enter project number to view/edit.");
 
