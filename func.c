@@ -69,27 +69,9 @@ void list_projs( char* buffer, char* username ){
   DIR *d = NULL; struct dirent *de = NULL;
   char path[100];
   int i = 1;
-  
-  sprintf(path, "projects/%s", username);  
-  d = opendir(path);
-  sprintf(buffer, "%s's projects:\n", username);
-  while ( (de = readdir(d)) ){
-    if ( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
-      ;
-    } else {
-      char *proj;
-      //int proj_len = strlen(de->d_name);
-      proj = (char*)malloc(50 * sizeof(char));
-      sprintf(proj, "\t[%d]%s\n", i, de->d_name);
-      strcat(buffer, proj);
-      free(proj);
-
-      i++;
-    }
-  }
 
   //THIS DOESN'T WORK
-  /*
+  
   sprintf(path, "projects");
   d = opendir(path);
   DIR *sub = NULL; struct dirent *subde = NULL;
@@ -97,29 +79,42 @@ void list_projs( char* buffer, char* username ){
     sprintf(path, "projects/%s", de->d_name);
     sub = opendir(path);
     sprintf(buffer, "%s's projects:\n", de->d_name);
-    while( (subde = readdir(d)) ) {
-      if ( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
-	;
-      } else {
-	sprintf(path, "projects/%s/%s/members.csv", de->d_name, subde->d_name);
-	char arr[100][4][1024];
-	int cols=1, rows=parse_csv(path, arr); int r=0, c=0;
-	for(r=0; r<rows; r++) {
-	  for(c=0; c<cols; c++) {
-	    if(strncmp(username, arr[r][c], strlen(username)) == 0) {
-	      char *proj;
-	      sprintf(proj, "\t[%d]%s\n", i, subde->d_name);
-	      strcat(buffer, proj);
-	      free(proj);
-	      
-	      i++;
+    if ( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
+      ;
+    } else if ( (strncmp(de->d_name, username, strlen(username)) == 0) ) {
+      char *proj;
+      //int proj_len = strlen(de->d_name);
+      proj = (char*)malloc(50 * sizeof(char));
+      sprintf(proj, "\t[%d]%s\n", i, de->d_name);
+      strcat(buffer, proj);
+      free(proj);
+      
+      i++;
+    } else {
+      while( (subde = readdir(sub)) ) {
+	if ( (strcmp(subde->d_name, ".") == 0) ||
+	     (strcmp(subde->d_name, "..") == 0) ) {
+	  sprintf(path, "projects/%s/%s/members.csv", de->d_name, subde->d_name);
+	  printf("path: %s\n", path);
+	  char arr[100][4][1024];
+	  int cols=1, rows=parse_csv(path, arr); int r=0, c=0;
+	  for(r=0; r<rows; r++) {
+	    for(c=0; c<cols; c++) {
+	      if(strncmp(username, arr[r][c], strlen(username)) == 0) {
+		char *proj;
+		sprintf(proj, "\t[%d]%s\n", i, subde->d_name);
+		strcat(buffer, proj);
+		free(proj);
+		
+		i++;
+	      }
 	    }
 	  }
 	}
       }
     }
   }
-  */
+  
   strcat(buffer, "Enter project number to view/edit.");
 
 }
