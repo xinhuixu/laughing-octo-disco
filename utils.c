@@ -111,7 +111,7 @@ int edit_status(char arr[100][4][1024], char *uname, char *task, char *newstat, 
   int i=0, j=0, k=0;
   for(i=0; i<rows; i++) {
     if( strncmp(arr[i][0], uname, strlen(uname)) == 0 ) {
-      if( strncmp(arr[i][1], task, strlen(task)) == 0 ) {
+      else if( strncmp(arr[i][1], task, strlen(task)) == 0 ) {
 	for(k=0; k<strlen(newstat+1); k++, newstat++) {
 	  strcpy(&arr[i][3][k], newstat);
 	}
@@ -131,8 +131,13 @@ int remove_row(char *filename, char arr[100][4][1024], char *uname, char *task, 
 
   for(i=0; i<rows; i++) {
     if( strncmp(arr[i][0], uname, strlen(uname)) == 0 ) {
-      if( strncmp(arr[i][1], task, strlen(task)) == 0 ) {
+      if( cols == 1 ) {
 	start = i;
+	break;
+      }
+      else if( strncmp(arr[i][1], task, strlen(task)) == 0 ) {
+	start = i;
+	break;
       }
     }
   }
