@@ -87,7 +87,7 @@ void list_projs( char* buffer, char* username ){
       i++;
     }
   }
-  /*
+  
   sprintf(path, "projects");
   d = opendir(path);
   DIR *sub = NULL; struct dirent *subde = NULL;
@@ -96,24 +96,28 @@ void list_projs( char* buffer, char* username ){
     sub = opendir(path);
     sprintf(buffer, "%s's projects:\n", de->d_name);
     while( (subde = readdir(d)) ) {
-      sprintf(path, "projects/%s/%s/members.csv", de->d_name, subde->d_name);
-      char arr[100][4][1024];
-      int cols=1, rows=parse_csv(path, arr); int r=0, c=0;
-      for(r=0; r<rows; r++) {
-	for(c=0; c<cols; c++) {
-	  if(strncmp(username, arr[r][c], strlen(username)) == 0) {
-	    char *proj;
-	    sprintf(proj, "\t[%d]%s\n", i, subde->d_name);
-	    strcat(buffer, proj);
-	    free(proj);
-
-	    i++;
+      if ( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
+	;
+      } else {
+	sprintf(path, "projects/%s/%s/members.csv", de->d_name, subde->d_name);
+	char arr[100][4][1024];
+	int cols=1, rows=parse_csv(path, arr); int r=0, c=0;
+	for(r=0; r<rows; r++) {
+	  for(c=0; c<cols; c++) {
+	    if(strncmp(username, arr[r][c], strlen(username)) == 0) {
+	      char *proj;
+	      sprintf(proj, "\t[%d]%s\n", i, subde->d_name);
+	      strcat(buffer, proj);
+	      free(proj);
+	      
+	      i++;
+	    }
 	  }
 	}
       }
     }
   }
-  */
+  
   strcat(buffer, "Enter project number to view/edit.");
 
 }
