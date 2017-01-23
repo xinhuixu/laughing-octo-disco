@@ -87,7 +87,7 @@ void list_projs( char* buffer, char* username ){
       i++;
     }
   }
-
+  /*
   sprintf(path, "projects");
   d = opendir(path);
   DIR *sub = NULL; struct dirent *subde = NULL;
@@ -113,7 +113,7 @@ void list_projs( char* buffer, char* username ){
       }
     }
   }
-  
+  */
   strcat(buffer, "Enter project number to view/edit.");
 
 }
