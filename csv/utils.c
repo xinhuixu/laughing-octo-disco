@@ -52,7 +52,7 @@ int parse_csv(char *filename, char arr[100][4][1024]) {
   return rows;
 }
 
-int add_row(char arr[100][4][1024], char *uname, char *task, char *dline, char *stat, int rows, int cols) {
+int add_row(char *filename, char arr[100][4][1024], char *uname, char *task, char *dline, char *stat, int rows, int cols) {
   char add[4][1024];
   int i=0;
   
@@ -69,10 +69,10 @@ int add_row(char arr[100][4][1024], char *uname, char *task, char *dline, char *
     strcpy(&add[3][i], stat);
   }
 
-  return add_helper(add, arr, rows, cols);
+  return add_helper(filename, add, arr, rows, cols);
 }
 
-int add_helper(char add[4][1024], char arr[100][4][1024], int rows, int cols) {
+int add_helper(char *filename, char add[4][1024], char arr[100][4][1024], int rows, int cols) {
   int i=0, j=0;
   
   for(i=0; i<cols; i++) {
@@ -83,7 +83,7 @@ int add_helper(char add[4][1024], char arr[100][4][1024], int rows, int cols) {
   }
 
   rows++;
-  write_to_file("tasks.txt", arr, rows, cols);
+  write_to_file(filename, arr, rows, cols);
   
   return rows;
 }
@@ -124,12 +124,11 @@ int edit_status(char arr[100][4][1024], char *uname, char *task, char *newstat, 
   return -1;
 }
 
-int remove_row(char arr[100][4][1024], char *uname, char *task, int rows, int cols) {
+int remove_row(char *filename, char arr[100][4][1024], char *uname, char *task, int rows, int cols) {
 
   int i=0, j=0;
-  int start=0;
+  int start=-1;
 
-  printf("one\n");
   for(i=0; i<rows; i++) {
     if( strncmp(arr[i][0], uname, strlen(uname)) == 0 ) {
       if( strncmp(arr[i][1], task, strlen(task)) == 0 ) {
@@ -138,7 +137,9 @@ int remove_row(char arr[100][4][1024], char *uname, char *task, int rows, int co
     }
   }
 
-  printf("two\n");
+  if(start == -1)
+    return rows;
+  
   for(i=start; i<rows; i++) {
     for(j=0; j<cols; j++) {
       strcpy(arr[i][j], arr[i+1][j]);
@@ -146,7 +147,7 @@ int remove_row(char arr[100][4][1024], char *uname, char *task, int rows, int co
   }
   
   rows--;
-  write_to_file("tasks.txt", arr, rows, cols);
+  write_to_file(filename, arr, rows, cols);
   
   return rows;
 }
@@ -160,6 +161,19 @@ void print_arr(char arr[100][4][1024], int rows, int cols) {
     }
     printf("%s\n", arr[i][j]);
   }
+}
+
+//for testing ONLY
+void print_file(char *filename, int rows, int cols) {
+
+  int c;
+  FILE *fd = fopen(filename, "r");
+  if(fd) {
+    while( (c = getc(fd)) != EOF)
+      putchar(c);
+    fclose(fd);
+  }
+  
 }
   
 void write_to_file(char *filename, char arr[100][4][1024], int rows, int cols) {
@@ -190,27 +204,34 @@ void write_to_file(char *filename, char arr[100][4][1024], int rows, int cols) {
 int main() {
   char arr[100][4][1024]; //array!
   int i=0,j=0; int cols=4,rows=0;
+  char *filename = "tasks.txt";
 
-  rows = parse_csv("tasks.txt", arr);
+  rows = parse_csv(filename, arr);
+  print_file(filename, rows, cols);
   
-  printf("ADDING ROW...\n");
+  printf("\nADDING ROW...\n");
   char uname[1024]; strcpy(uname, "Jefff_star");
   char task[1024]; strcpy(task, "eat a banana");
   char dline[1024]; strcpy(dline, "01/31/17 1900");
   char stat[1024]; strcpy(stat, "In progress");
-  rows = add_row(arr, uname, task, dline, stat, rows, cols);
+  rows = add_row(filename, arr, uname, task, dline, stat, rows, cols);
+  print_file(filename, rows, cols);
   
-  printf("EDITING DEADLINE...\n");
+  printf("\nEDITING DEADLINE...\n");
   char *newdline = "01/31/17 1930";
   if(edit_dline(arr, uname, task, newdline, rows, cols))
+    print_file(filename, rows, cols);
   
-  printf("EDITING STATUS...\n");
+  printf("\nEDITING STATUS...\n");
   char *newstat = "Complete";
   if(edit_status(arr, uname, task, newstat, rows, cols))
+    print_file(filename, rows, cols);
   
-  printf("REMOVING ROW...\n");
+  printf("\nREMOVING ROW...\n");
   strcpy(task, "take out the trash");
-  rows = remove_row(arr, uname, task, rows, cols);
-  
+  rows = remove_row(filename, arr, uname, task, rows, cols);
+  print_file(filename, rows, cols);
+
+  printf("\n");
   return 0;
 }
