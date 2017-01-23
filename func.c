@@ -82,7 +82,7 @@ void list_projs( char* buffer, char* username ){
     }
     else if( (strcmp(de->d_name, username) == 0) ) {
       printf("hit my own folder!\n");
-      sprintf(proj, "\t[%d\%s\n", i, de->d_name);
+      sprintf(proj, "\t[%d]\%s\n", i, de->d_name);
       strcat(buffer, proj);
       free(proj);
       i++;
@@ -115,7 +115,6 @@ void list_projs( char* buffer, char* username ){
       }
     }
   }
-    
   
   strcat(buffer, "Enter project number to view/edit.");
 
