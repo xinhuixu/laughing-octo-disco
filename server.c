@@ -46,7 +46,7 @@ void sub_server( int sd ) {
   int pid;
   bool USER = false;
   int HOME;
-  int PROJECTS;
+  int PROJECT = -1;
   char buffer[MESSAGE_BUFFER_SIZE];
   char home[MESSAGE_BUFFER_SIZE];
   strcpy(home, "[0]New project\t[1]My projects");
@@ -80,6 +80,7 @@ void sub_server( int sd ) {
     } else if (HOME == 999) {
       HOME = home_process(buffer, username);      
 
+      /*PROJECT CREATION LOOP*/  
     } else if (HOME == 0) {      
       char new_proj_name[MESSAGE_BUFFER_SIZE];
       strcpy(new_proj_name, buffer);
@@ -92,10 +93,13 @@ void sub_server( int sd ) {
       }
       HOME = 999;
 
+      /*PROJECT MANAGING LOOP*/
     } else if (HOME == 1) {
-      //project managing mode
-      PROJECTS = 0;
-      view_proj(buffer, username);  
+      if (PROJECT == -1) {
+	PROJECT = view_proj(buffer, username);
+      } else {
+	proj_process(buffer, username);
+      }
       
     } else if ( strcmp(buffer, "exit") == 0){
       exit(0);

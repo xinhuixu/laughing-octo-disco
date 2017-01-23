@@ -1,5 +1,4 @@
 #include "func.h"
-#include "utils.h"
 
 int home_process( char* buffer, char* username ){
   if ( strcmp(buffer, "0") == 0 ){
@@ -72,6 +71,9 @@ void list_projs( char* buffer, char* username ){
       i++;
     }
   }
+
+  /* TODO: traverse to all other user's projects' members.csv to find projects user participates in */
+  
   strcat(buffer, "Enter project number to view/edit.");
 
 }
@@ -92,6 +94,13 @@ void build_array( char array[100][100], char* username ){
   }
 }
 
+void get_proj_name( char* proj_name, char* username, char* proj_num ){
+  char array[100][100];
+  int num = atoi(proj_num);
+  build_array(array, username);
+  strcpy(proj_name, array[num]);
+}
+		    
 void new_proj( char* new_proj_name, char* username ){
   char path[100];
 
@@ -131,31 +140,26 @@ int count_projs( char* username ){
   return i;
 }
 
-void get_proj( char* proj_number, char* username ){
-
-
-}
-
-void view_proj( char* buffer, char* username){
+int view_proj( char* buffer, char* username){
   bool valid = false;
   int num_projs;
   char proj_name[100];
   num_projs = count_projs(username);
-  char array[100][100];
+
   char i[4];
-  int j = 1;  
+  int j = 1;
+  
   while (j <= num_projs){
     sprintf(i, "%d", j);
 
     if (strcmp(i, buffer) == 0) {
 
-      /*TODO: paste project content to buffer */
+      /*TODO: paste LIST OF MEMBERS hto buffer*/
 
-      build_array(array, username);
-      strcpy(proj_name, array[j]);
-      sprintf(buffer, "Project:[%s] %s\n", i, proj_name);
+      get_proj_name(proj_name, username, i);
+      sprintf(buffer, "Project[%s]: %s\n", i, proj_name);
       strcat(buffer,"[0]All tasks\t[1]My tasks\t[2]Add member\t[3]New task");
-      
+  
       valid = true;
       break;
     }
@@ -169,12 +173,23 @@ void view_proj( char* buffer, char* username){
     char projs[1000];
     list_projs(projs, username);
     sprintf(buffer, "Invalid command.\n%s", projs);
+    return 0;
+  } else {
+    return j;
   }
 }
 
-void all_tasks( char* buffer, char* username ){
-}
-void my_tasks( char* buffer, char* username ){
+void proj_process( char* buffer, char* username ){
+  if (strcmp(buffer, "0") == 0){
+    /*TODO: PASTE ALL TASKS INTO BUFFER*/
+  } else if (strcmp(buffer, "1") == 0){
+    /*TODO: PASTE THIS username'S TASKS INTO BUFFER*/
+  } else if (strcmp(buffer, "2") == 0){
+    /*TODO: add member, prompt for new member name, manager only*/
+  } else if (strcmp(buffer, "3") == 0){
+    /*TODO: new task, manager only*/
+  }
+
 }
 
 bool is_manager( char* username, char* proj_name ) {
@@ -190,8 +205,10 @@ bool is_manager( char* username, char* proj_name ) {
   fclose(members);
   return false;
 }
- 
-void add_task( char* buffer, char* proj_name, char* username )
+
+void all_tasks( char* buffer, char* username );
+void my_tasks( char* buffer, char* username );
+void add_task( char* buffer, char* proj_name, char* username );
 void remove_task( char* proj_name, char* username );
 void remove_member( char* to_rem );
 void add_member( char* new_member );
