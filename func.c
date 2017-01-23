@@ -87,7 +87,9 @@ void list_projs( char* buffer, char* username ){
       i++;
     }
   }
-  
+
+  //THIS DOESN'T WORK
+  /*
   sprintf(path, "projects");
   d = opendir(path);
   DIR *sub = NULL; struct dirent *subde = NULL;
@@ -117,7 +119,7 @@ void list_projs( char* buffer, char* username ){
       }
     }
   }
-  
+  */
   strcat(buffer, "Enter project number to view/edit.");
 
 }
@@ -280,13 +282,39 @@ bool is_manager( char* username, char* proj_name ) {
 
 void all_tasks( char* buffer, char* username );
 void my_tasks( char* buffer, char* username );
-void add_task( char* buffer, char* proj_name, char* username );
+void add_task( char* buffer, char* proj_name, char* username, char *task, char *deadline ) {
 
-void remove_task( char* proj_name, char* username, char* buffer );
+  char path[100];
+  sprintf(path, "projects/%s/%s/tasks.csv", username, proj_name);
+  char arr[100][4][1024];
+  int r = parse_csv(path, arr);
+
+  int a = add_row(path, arr, username, task, deadline, "Not yet started", r, 4);
+  if( a == r+1 )
+    sprintf(buffer, "Great! You successfully added assigned %s [%s], due %s.\n", username, task, deadline);
+  else
+    sprintf(buffer, "Sorry! This task was not added.\n");
+
+}
+
+void remove_task( char* proj_name, char* username, char *task, char* buffer ) {
+
+  char path[100];
+  sprintf(path, "projects/%s/%s/tasks.csv", username, proj_name);
+  char arr[100][4][1024];
+  int r = parse_csv(path, arr);
+
+  int rem = remove_row(path, arr, username, task, r, 4);
+  if( rem == r-1 )
+    sprintf(buffer, "Great! You successfully removed [%s] from %s.\n", task, username);
+  else
+    sprintf(buffer, "Sorry! This task was not removed.\n");
+  
+}
 
 void remove_member( char* to_rem );
 void add_member( char* new_member );
-void update_status( char* buffer );
+void update_status( char* buffer, char *username, char *task, char *new );
 
 /* borrowed from http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html */
 /* lmao were not using this probably*/
