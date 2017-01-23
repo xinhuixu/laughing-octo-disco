@@ -13,10 +13,7 @@
 #include <dirent.h>
 
 #include "func.h"
-<<<<<<< HEAD
 #include "utils.c"
-=======
->>>>>>> 8a0075eea5ea96a9f4438a2d18e4c73524ca9209
 
 int home_process( char* buffer, char* username ){
   if ( strcmp(buffer, "0") == 0 ){
