@@ -73,7 +73,11 @@ void sub_server( int sd ) {
   while (read( sd, buffer, sizeof(buffer) )) {
     printf("[SERVER %d] received: %s\n", pid, buffer );
     printf("HOME = %d\n",HOME);
-    if (HOME == 999) {
+
+    if ( strcmp(buffer, "home") == 0){
+      strcpy(buffer, home);
+      HOME = 999;
+    } else if (HOME == 999) {
       HOME = home_process(buffer, username);      
 
     } else if (HOME == 0) {      
@@ -87,16 +91,12 @@ void sub_server( int sd ) {
 	sprintf(buffer, "Project already exists.\n%s", home);
       }
       HOME = 999;
+
     } else if (HOME == 1) {
       //project managing mode
       PROJECTS = 0;
       view_proj(buffer, username);  
-      //HOME = 999;
-    }
-
-    if ( strcmp(buffer, "home") == 0){
-      strcpy(buffer, home);
-      HOME = 999;
+      
     } else if ( strcmp(buffer, "exit") == 0){
       exit(0);
     }

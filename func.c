@@ -53,6 +53,7 @@ void list_projs( char* buffer, char* username ){
   DIR *d = NULL; struct dirent *de = NULL;
   char path[100];
   int i = 1;
+  
   sprintf(path, "projects/%s", username);  
   d = opendir(path);
   sprintf(buffer, "%s's projects:\n", username);
@@ -64,14 +65,30 @@ void list_projs( char* buffer, char* username ){
       //int proj_len = strlen(de->d_name);
       proj = (char*)malloc(50 * sizeof(char));
       sprintf(proj, "\t[%d]%s\n", i, de->d_name);
-
       strcat(buffer, proj);
       free(proj);
+
       i++;
     }
   }
   strcat(buffer, "Enter project number to view/edit.");
-  
+
+}
+
+void build_array( char array[100][100], char* username ){
+  DIR *d = NULL; struct dirent *de = NULL;
+  char path[100];
+  int i = 1;
+  sprintf(path, "projects/%s", username);  
+  d = opendir(path);
+  while ( (de = readdir(d)) ){
+    if ( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
+      ;
+    } else {
+      strcpy(array[i], de->d_name);
+      i++;
+    }
+  }
 }
 
 void new_proj( char* new_proj_name, char* username ){
@@ -113,32 +130,41 @@ int count_projs( char* username ){
   return i;
 }
 
+void get_proj( char* proj_number, char* username ){
+
+
+}
+
 void view_proj( char* buffer, char* username){
-  bool valid;
+  bool valid = false;
   int num_projs;
+  char proj_name[100];
   num_projs = count_projs(username);
-  printf("view_proj: num_projs: %d\n", num_projs);
-  
+  char array[100][100];
   char i[4];
-  
-  while (num_projs){
-    sprintf(i, "%d", num_projs--);
-    //printf("view_proj: i: %s, buffer: %s\n", i, buffer);
+  int j = 1;  
+  while (j <= num_projs){
+    sprintf(i, "%d", j);
+
     if (strcmp(i, buffer) == 0) {
-      sprintf(buffer, "view_proj: %s\n", i);
-      
+
       /*TODO: paste project content to buffer */
 
+      build_array(array, username);
+      strcpy(proj_name, array[j]);
+      sprintf(buffer, "Project:[%s] %s\n", i, proj_name);
       strcat(buffer,"[0]All tasks\t[1]My tasks\t[2]Add member\t[3]New task");
       
       valid = true;
       break;
     }
+    j++;
+      
   }
   if (strcmp(buffer, "home") == 0)
     valid = true;
   
-  if (!valid){
+  if (valid == false){
     char projs[1000];
     list_projs(projs, username);
     sprintf(buffer, "Invalid command.\n%s", projs);
