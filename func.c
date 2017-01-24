@@ -361,7 +361,6 @@ void remove_task( char* proj_name, char* username, char *task, char* buffer ) {
 void remove_member( char* to_rem );
 void add_member( char* new_member );
 
-
 /* NOTES ON UPDATE_STATUS FOR XINHUI RE: SERVER SIDE:
    - if update_status is being called from a place that uses proj_num (I was sort unclear on when that happens), then use the second, currently commented out, sprintf line, otherwise keep the first one (username is required as a param regardless)
    - make it so that the user only has 2 choices for updating status: 
