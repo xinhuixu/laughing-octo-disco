@@ -244,8 +244,8 @@ int proj_process( char* buffer, int proj_num, char* username ){
     } else { //not a manager
       sprintf(buffer, "You are not authorized to use this command.\n");
       char num[500]; sprintf(num, "%d", proj_num);
-      //pass proj_number to view_proj, we're goin back to viewing the proj!
-      view_proj(num, username);
+
+      list_projs(num, username);
       strcat(buffer, num);
       return -1;
     }
