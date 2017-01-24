@@ -263,9 +263,7 @@ bool is_manager( char* username, char* proj_name ) {
   char arr[100][4][1024];
   int rows = parse_csv(path, arr); int r=0;
   sprintf(str, "%s", proj_name);
-  printf("str: %s\n", str);
   for( r=0; r<rows; r++ ) {
-    printf("arr[%d][0]: %s\n", r, arr[r][0]);
     if( strcmp(arr[r][0], str) == 0 )
       return true;
   }
@@ -387,6 +385,8 @@ void add_member( char* buffer, char* username, char* proj_name, char* new_member
   int rows;
   char arr[100][4][1024];
   char arr2[100][4][1024];
+
+  printf("proj_name: %s\n", proj_name);
 
   if( is_manager(username, proj_name) ) {
     sprintf(path, "users/%s/pii.csv", new_member);
