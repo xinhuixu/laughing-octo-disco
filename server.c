@@ -70,7 +70,8 @@ void sub_server( int sd ) {
   /* READ/WRITE TO SD LOOP */
   while (read( sd, buffer, sizeof(buffer) )) {
     printf("[SERVER %d] received: %s\n", pid, buffer );
-    printf("HOME = %d\n",HOME);
+    printf("HOME [before] = %d\t",HOME);
+    printf("PROJECT [before] = %d\n",PROJECT);
 
     if ( strcmp(buffer, "home") == 0){
       strcpy(buffer, home);
@@ -94,7 +95,6 @@ void sub_server( int sd ) {
 
       /*PROJECT MANAGING LOOP*/
     } else if (HOME == 1) {
-      printf("HOME==1, PROJECT==%d\n", PROJECT);
 
       if (PROJECT == -1) {
 	//paste all projs into buffer, set PROJECT
@@ -113,6 +113,8 @@ void sub_server( int sd ) {
       exit(0);
     }
 
+    printf("HOME [after] = %d\t", HOME);
+    printf("PROJECT [after] = %d\n", PROJECT);
     write(sd, buffer, sizeof(buffer));
   }
 }
