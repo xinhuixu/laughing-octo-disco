@@ -263,25 +263,18 @@ void get_manager( char* manager, char* proj_name ){
 }
 
 bool is_manager( char* username, char* proj_name ) {
-  char path[100];
-  sprintf(path, "users/%s/%s/members.csv", username, proj_name);  
-  FILE * members = fopen(path, "r");  
+  char path[100]; char *str;
+  sprintf(path, "users/%s/pii.csv", username);
+  str = (char *)malloc(50 * sizeof(char *));
 
-  if (errno == -1){
-    printf("[%s] is NOT the manager of project [%s]\n", username, proj_name);
-    return false;
-  }else{
-    printf("[%s] is the manager of project [%s]\n", username, proj_name);
-    return true;
+  char arr[100][4][1024];
+  int rows = parse_csv(path, arr); int r=0;
+  for( r=0; r<rows; r++ ) {
+    if( strcmp(arr[r][0], str) == 0 )
+      return true;
   }
-  /*char buf[20];  
-  fgets(buf, 20, members); //fgets reads until first newline
-  if (strcmp(buf, username) == 0){
-    fclose(members);
-    return true;
-  }
-  fclose(members);
-  return false;*/
+
+  return false;
 }
 
 int task_view( char* buffer, int TASK, char* username){
