@@ -200,14 +200,15 @@ int view_proj( char* buffer, char* username){
 }
 
 int proj_process( char* buffer, int proj_num, char* username ){
+  char *proj_name; proj_name = (char *)malloc(50 * sizeof(char *));
+  char num[4]; sprintf(num, "%d", proj_num);
+  get_proj_name( proj_name, username, num );
+  
   if (strcmp(buffer, "0") == 0){
-    char *proj_name; proj_name = (char *)malloc(50 * sizeof(char *));
-    char num[4]; sprintf(num, "%d", proj_num);
-    get_proj_name( proj_name, username, num );
     all_tasks( buffer, username, proj_name );
     return 0;
   } else if (strcmp(buffer, "1") == 0){
-    my_tasks(buffer, username);
+    my_tasks( buffer, username, proj_name );
     return 1;
   } else if (strcmp(buffer, "2") == 0){
     /*TODO: add member, prompt for new member name, manager only*/
@@ -316,7 +317,7 @@ void all_tasks( char* buffer, char* username, char* proj_name ) {
 
 }
 
-void my_tasks( char* buffer, char* username ) {
+void my_tasks( char* buffer, char* username, char* proj_name ) {
   int i = 1;
   char path[100];
   sprintf(path, "users/%s/pii.csv", username);
@@ -326,24 +327,24 @@ void my_tasks( char* buffer, char* username ) {
   task = (char *)malloc(50 * sizeof(char *));
 
   char arr[100][4][1024];
-  int cols=1, rows=parse_csv(path, arr); int r=0, c=0;
+  int rows=parse_csv(path, arr); int r=0;
   
   for(r=0; r<rows; r++) {
-    for(c=0; c<cols; c++) {
-
-      sprintf(path, "users/%s/tasks.csv", arr[r][c]);
+    if( strcmp(arr[r][0], proj_name) == 0 ) {
+      sprintf(path, "users/%s/tasks.csv", arr[r][0]);
       char arr2[100][4][1024];
       int rows2 = parse_csv(path, arr2); int r2=0;
       
       for(r2=0; r2<rows2; r2++) {
 	if( strcmp(arr2[r2][0], username) == 0 ) {
-	  sprintf(task, "\t[%d] [%s] [%s] %s\n", i, arr[r][c], arr2[r2][2], arr2[r2][1]);
+	  sprintf(task, "\t[%d] [%s] [%s] %s\n", i, arr[r][0], arr2[r2][2], arr2[r2][1]);
 	  strcat(buffer, task);
 	  i++;
 	}
       }
     }
   }
+  
   strcat(buffer, "Enter the task number to edit.");
 }
 
@@ -403,7 +404,7 @@ void update_status( char* buffer, char *username, char *proj_name, char *task, i
   
   for(r=0; r<rows; r++) {
     if( strcmp(arr[r][1], task) == 0 ) {
-      sprintf(curr, arr[r][3]);
+      sprintf(curr, "%s", arr[r][3]);
       break;
     }
   }
