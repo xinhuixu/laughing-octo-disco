@@ -18,7 +18,6 @@ void new_proj( char* new_proj_name, char* username );
 int count_projs( char* username );
 int view_proj( char* buffer, char* username);
 int proj_process( char* buffer, int proj_num, char* username );
-void get_manager( char* manager, char* proj_name );
 bool is_manager( char* username, char* proj_name );
 int task_view( char* buffer, int TASK, char* username);
 int task_process( char*buffer, int TASK, char* username );

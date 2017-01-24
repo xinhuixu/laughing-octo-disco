@@ -145,7 +145,7 @@ void new_proj( char* new_proj_name, char* username ){
   sprintf(path, "users/%s/pii.csv", username);
   char arr[100][4][1024];
   int rows = parse_csv(path, arr);
-  sprintf( arr[rows][0], "%s", new_proj_name );
+  sprintf( arr[rows][0], "%s/%s", username, new_proj_name );
   rows++;
   write_to_file(path, arr, rows, 1);
   print_file(path, rows, 1);
@@ -255,34 +255,19 @@ int proj_process( char* buffer, int proj_num, char* username ){
   return -1;
 }
 
-/*get_manager(manager, project name)
-populate manager with the manager of the project*/
-void get_manager( char* manager, char* proj_name ){
-
-
-
-}
-
 bool is_manager( char* username, char* proj_name ) {
-  char path[100];
-  sprintf(path, "users/%s/%s/members.csv", username, proj_name);  
-  FILE * members = fopen(path, "r");  
+  char path[100]; char *str;
+  sprintf(path, "users/%s/pii.csv", username);
+  str = (char *)malloc(50 * sizeof(char *));
 
-  if (errno == -1){
-    printf("[%s] is NOT the manager of project [%s]\n", username, proj_name);
-    return false;
-  }else{
-    printf("[%s] is the manager of project [%s]\n", username, proj_name);
-    return true;
+  char arr[100][4][1024];
+  int rows = parse_csv(path, arr); int r=0;
+  for( r=0; r<rows; r++ ) {
+    if( strcmp(arr[r][0], str) == 0 )
+      return true;
   }
-  /*char buf[20];  
-  fgets(buf, 20, members); //fgets reads until first newline
-  if (strcmp(buf, username) == 0){
-    fclose(members);
-    return true;
-  }
-  fclose(members);
-  return false;*/
+
+  return false;
 }
 
 int task_view( char* buffer, int TASK, char* username){
@@ -396,14 +381,21 @@ void add_member( char* buffer, char* username, char* proj_name, char* new_member
   
   char path[100];
   char msg[100];
+  int rows;
+  char arr[100][4][1024];
+  char arr2[100][4][1024];
 
   if( is_manager(username, proj_name) ) {
+    sprintf(path, "users/%s/pii.csv", new_member);
+    sprintf(msg, "%s/%s", username, proj_name);
+    rows = parse_csv(path, arr);
+    sprintf( arr2[rows][0], "%s", msg );
+    write_to_file(path, arr, rows+1, 1);
+    
     sprintf(path, "users/%s/%s/members.csv", username, proj_name);
-
-    char arr[100][4][1024];
-    int rows = parse_csv(path, arr) + 1;
-
-    strcpy( arr[rows][0], new_member );
+    rows = parse_csv(path, arr2);
+    sprintf( arr2[rows][0], "%s", new_member );
+    write_to_file(path, arr2, rows+1, 1);
     sprintf(msg, "%s successfully added to %s.\n", new_member, proj_name);
   } else {
     sprintf(msg, "Sorry, you are not authorized to do that.\n");
