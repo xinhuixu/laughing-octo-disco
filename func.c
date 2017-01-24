@@ -69,9 +69,10 @@ bool proj_exists( char* username, char* proj_name ){
 
 bool list_projs( char* buffer, char* username ){
   sprintf(buffer, "%s's projects:\n", username);
-  DIR *d = NULL; struct dirent *de = NULL;
+  
   char path[100];
   char *proj; proj = (char *)malloc(50 * sizeof(char *));
+
   bool PROJ_EXISTS = false;
   
   sprintf(path, "users/%s/pii.csv", username);
@@ -96,16 +97,18 @@ bool list_projs( char* buffer, char* username ){
 }
 
 void build_array( char array[100][100], char* username ){
-  DIR *d = NULL; struct dirent *de = NULL;
+
   char path[100];
-  int i = 1;
-  sprintf(path, "users/%s", username);  
-  d = opendir(path);
-  while ( (de = readdir(d)) ){
-    if ( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
-      ;
-    } else {
-      strcpy(array[i], de->d_name);
+  sprintf(path, "users/%s/pii.csv", username);
+
+  int i=1;
+  char arr[100][4][1024];
+  int rows = parse_csv(path, arr), cols=1; int r=0, c=0;
+  for(r=0; r<rows; r++) {
+    for(c=0; c<cols; c++) {
+
+      strcpy(array[i], arr[r][c]);
+
       i++;
     }
   }
@@ -190,7 +193,7 @@ int view_proj( char* buffer, char* username){
     char projs[1000];
     list_projs(projs, username);
     sprintf(buffer, "Invalid command.\n%s", projs);
-    return 0;
+    return -1;
   } else {
     return j;
   }

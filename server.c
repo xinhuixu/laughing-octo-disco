@@ -75,6 +75,7 @@ void sub_server( int sd ) {
     if ( strcmp(buffer, "home") == 0){
       strcpy(buffer, home);
       HOME = 999;
+      PROJECT = -1; //VERY IMPORTANT
     } else if (HOME == 999) {
       HOME = home_process(buffer, username);      
 
@@ -93,6 +94,8 @@ void sub_server( int sd ) {
 
       /*PROJECT MANAGING LOOP*/
     } else if (HOME == 1) {
+      printf("HOME==1, PROJECT==%d\n", PROJECT);
+
       if (PROJECT == -1) {
 	//paste all projs into buffer, set PROJECT
 	PROJECT = view_proj(buffer, username);
@@ -101,8 +104,10 @@ void sub_server( int sd ) {
       } else if (PROJECT == 2){
 	/* MINI TASK-ASSSIGNMENT LOOP */
 	char task[100][10];
-	strcpy(task, buffer);
-	printf("TASK_ASS LOOP: buffer: %s\n");
+	//	strcpy(task, buffer);
+	printf("TASK_ASS LOOP: buffer: %s\n", buffer);
+      } else {
+	
       }
     } else if ( strcmp(buffer, "exit") == 0){
       exit(0);
