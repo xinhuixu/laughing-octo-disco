@@ -145,7 +145,7 @@ void new_proj( char* new_proj_name, char* username ){
   sprintf(path, "users/%s/pii.csv", username);
   char arr[100][4][1024];
   int rows = parse_csv(path, arr);
-  sprintf( arr[rows][0], "%s", new_proj_name );
+  sprintf( arr[rows][0], "%s/%s", username, new_proj_name );
   rows++;
   write_to_file(path, arr, rows, 1);
   print_file(path, rows, 1);
@@ -397,12 +397,17 @@ void add_member( char* buffer, char* username, char* proj_name, char* new_member
   char msg[100];
 
   if( is_manager(username, proj_name) ) {
-    sprintf(path, "users/%s/%s/members.csv", username, proj_name);
-
+    sprintf(path, "users/%s/pii.csv", new_member);
+    sprintf(msg, "%s/%s", username, proj_name);
     char arr[100][4][1024];
-    int rows = parse_csv(path, arr) + 1;
-
-    strcpy( arr[rows][0], new_member );
+    rows = parse_csv(path, arr);
+    sprintf( arr2[rows][0], msg );
+    write_to_file(path, r, rows+1, 1);
+    
+    sprintf(path, "users/%s/%s/members.csv", username, proj_name);
+    
+    rows = parse_csv(path, arr2);
+    strcpy( arr2[rows][0], new_member );
     sprintf(msg, "%s successfully added to %s.\n", new_member, proj_name);
   } else {
     sprintf(msg, "Sorry, you are not authorized to do that.\n");
