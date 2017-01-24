@@ -141,6 +141,12 @@ void new_proj( char* new_proj_name, char* username ){
   int tasks = open(path, O_CREAT|O_RDWR, 0777);
   //printf("opened tasks\n");
   close(tasks);
+
+  sprintf(path, "users/%s/pii.csv", username);
+  char arr[100][4][1024];
+  int rows = parse_csv(path, arr) + 1;
+  strcpy( arr[rows][0], new_proj_name );
+  write_to_file(path, arr, rows, 1);
   
 }
 
@@ -283,7 +289,7 @@ bool is_manager( char* username, char* proj_name ) {
 int task_view( char* buffer, int TASK, char* username){
   
   sprintf(buffer, "Mark task[%d]'s progress:\n\t[0]Not yet started\t[1]In progess\t[2]Complete", TASK);
-  return -2;
+  return 0;
 }
 
 int task_process( char*buffer, int TASK, char* username ){
@@ -344,7 +350,7 @@ void my_tasks( char* buffer, char* username, char* proj_name ) {
       for(r2=0; r2<rows2; r2++) {
 	if( strcmp(arr2[r2][0], username) == 0 ) {
 	  //[increment] proj name [deadline]: task name, status
-	  sprintf(task, "\t[%d] %s [%s]: %s, %s\n", i, arr[r][0], arr2[r2][2], arr2[r2][1], arr2[r2][3]gi);
+	  sprintf(task, "\t[%d] %s [%s]: %s, %s\n", i, arr[r][0], arr2[r2][2], arr2[r2][1], arr2[r2][3]);
 	  strcat(buffer, task);
 	  i++;
 	}
@@ -385,7 +391,6 @@ void remove_task( char* proj_name, char* username, char *task, char* buffer ) {
   
 }
 
-void remove_member( char* to_rem );
 void add_member( char* new_member );
 
 /* NOTES ON UPDATE_STATUS FOR XINHUI RE: SERVER SIDE:
