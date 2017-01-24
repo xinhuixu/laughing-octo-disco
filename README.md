@@ -49,7 +49,7 @@ Projects a particular user manages are listed as directories within that user's 
 ### List of files
 
 #### DOCS
-* `DESIGN.pdf`, `DESIGN.txt`, `README.md`, `makefile`
+* `DESIGN.pdf`, `DESIGN.txt`, `README.md`, `devlog.txt`, `makefile`
 
 #### EVERYTHING ELSE LOL
 * `client.c`, `client.h`
