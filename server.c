@@ -82,7 +82,8 @@ void sub_server( int sd ) {
       TASK = -1;
     } else if (HOME == 999) {
       HOME = home_process(buffer, username);      
-
+      TASK = -1;
+      PROJECT = -1;
       /*PROJECT CREATION LOOP*/  
     } else if (HOME == 0) {      
       char new_proj_name[MESSAGE_BUFFER_SIZE];
@@ -131,6 +132,7 @@ void sub_server( int sd ) {
       } else {
 	
       }
+      
     } else if ( strcmp(buffer, "exit") == 0){
       exit(0);
     }
