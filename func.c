@@ -289,7 +289,7 @@ bool is_manager( char* username, char* proj_name ) {
 int task_view( char* buffer, int TASK, char* username){
   
   sprintf(buffer, "Mark task[%d]'s progress:\n\t[0]Not yet started\t[1]In progess\t[2]Complete", TASK);
-  return 0;
+  return -2;
 }
 
 int task_process( char*buffer, int TASK, char* username ){
