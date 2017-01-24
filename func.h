@@ -14,7 +14,7 @@ void execute( char** );
 bool user_exists( char* );
 bool proj_exists( char*, char* );
 void create_user( char* );
-void list_projs( char* , char*);
+bool list_projs( char* , char*);
 int view_proj( char*, char* );
 int count_projs( char* );
 bool is_manager( char*, char* );

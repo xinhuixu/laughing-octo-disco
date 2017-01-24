@@ -20,8 +20,10 @@ int home_process( char* buffer, char* username ){
     strcpy(buffer, "Enter title of new project:");
     return 0;
   } else if ( strcmp(buffer, "1") == 0) {
-    list_projs(buffer, username);
-    return 1;
+    if( list_projs(buffer, username) )
+      return 1;
+    else
+      return 0;
   } else {
     strcpy(buffer, "Invalid command.\n[0]New project\t[1]My projects");
     return 999;
@@ -30,7 +32,8 @@ int home_process( char* buffer, char* username ){
 
 void create_user( char* username ){
   char user_dir[100];
-  sprintf(user_dir, "projects/%s", username);
+  sprintf(user_dir, "users/%s", username);
+  
   int err = mkdir(user_dir, 0700);
   if (err)
     perror("create_user: mkdir failed.\n");
@@ -39,7 +42,7 @@ void create_user( char* username ){
 bool user_exists( char* username ){
   DIR *d = NULL;
   struct dirent *de = NULL;
-  d = opendir("projects");
+  d = opendir("users");
   //printf("USER DIRECTORIES:\n");
   while ( (de = readdir(d)) ){
     //printf("\t%s\n",de->d_name);
@@ -54,10 +57,9 @@ bool user_exists( char* username ){
 bool proj_exists( char* username, char* proj_name ){
   DIR *d = NULL; struct dirent *de = NULL;
   char path[100];
-  sprintf(path, "projects/%s", username);  
+  sprintf(path, "users/%s", username);  
   d = opendir(path);
   //printf("%s's projects:\n", username);
-  //TODO: CHECK ALL PROJECTS//
   while ( (de = readdir(d)) ){
       if (strcmp(de->d_name, proj_name) == 0)
 	return true;    
@@ -65,18 +67,21 @@ bool proj_exists( char* username, char* proj_name ){
   return false;
 }
 
-void list_projs( char* buffer, char* username ){
+bool list_projs( char* buffer, char* username ){
 
   DIR *d = NULL; struct dirent *de = NULL;
   char path[100];
   char *proj; proj = (char *)malloc(50 * sizeof(char *));
-  sprintf(path, "projects/%s", username);
+  bool PROJ_EXISTS = false;
+  
+  sprintf(path, "users/%s", username);
   d = opendir(path);
   int i = 0;
   while ( (de = readdir(d)) ) {
-    if( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
+    if( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) || (strcmp(de->d_name, "pii.csv") == 0) ) {
       ;
     } else {
+      PROJ_EXISTS = true;
       sprintf(proj, "\t[%d] %s\n", i, de->d_name);
       strcat(buffer, proj);
       i++;
@@ -85,13 +90,14 @@ void list_projs( char* buffer, char* username ){
   
   strcat(buffer, "Enter project number to view/edit.");
 
+  return PROJ_EXISTS;
 }
 
 void build_array( char array[100][100], char* username ){
   DIR *d = NULL; struct dirent *de = NULL;
   char path[100];
   int i = 1;
-  sprintf(path, "projects/%s", username);  
+  sprintf(path, "users/%s", username);  
   d = opendir(path);
   while ( (de = readdir(d)) ){
     if ( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
@@ -113,12 +119,12 @@ void get_proj_name( char* proj_name, char* username, char* proj_num ){
 void new_proj( char* new_proj_name, char* username ){
   char path[100];
 
-  sprintf(path, "projects/%s/%s", username, new_proj_name);
+  sprintf(path, "users/%s/%s", username, new_proj_name);
   int err = mkdir(path, 0700);
   if (err)
     printf("new_proj: mkdir failed.\n");
 
-  sprintf(path, "projects/%s/%s/members.csv", username, new_proj_name);
+  sprintf(path, "users/%s/%s/members.csv", username, new_proj_name);
   
   int members = open(path, O_CREAT|O_RDWR, 0777);
   //printf("opened members: %d, path: %s\n", members, path);
@@ -126,7 +132,7 @@ void new_proj( char* new_proj_name, char* username ){
   write(members, "\n", sizeof(char));
   close(members);
 
-  sprintf(path, "projects/%s/%s/tasks.csv", username, new_proj_name);
+  sprintf(path, "users/%s/%s/tasks.csv", username, new_proj_name);
   int tasks = open(path, O_CREAT|O_RDWR, 0777);
   //printf("opened tasks\n");
   close(tasks);
@@ -137,7 +143,7 @@ int count_projs( char* username ){
   DIR *d = NULL; struct dirent *de = NULL;
   char path[100];
   int i = 0;
-  sprintf(path, "projects/%s", username);  
+  sprintf(path, "users/%s", username);  
   d = opendir(path);  
   while ( (de = readdir(d)) ){
     if ( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
@@ -225,7 +231,7 @@ void get_manager( char* manager, char* proj_name ){
 
 bool is_manager( char* username, char* proj_name ) {
   char path[100];
-  sprintf(path, "projects/%s/%s/members.csv", username, proj_name);  
+  sprintf(path, "users/%s/%s/members.csv", username, proj_name);  
   FILE * members = fopen(path, "r");  
 
   if (errno)
@@ -248,7 +254,7 @@ void my_tasks( char* buffer, char* username );
 void add_task( char* buffer, char* proj_name, char* username, char *task, char *deadline ) {
 
   char path[100];
-  sprintf(path, "projects/%s/%s/tasks.csv", username, proj_name);
+  sprintf(path, "users/%s/%s/tasks.csv", username, proj_name);
   char arr[100][4][1024];
   int r = parse_csv(path, arr);
 
@@ -263,7 +269,7 @@ void add_task( char* buffer, char* proj_name, char* username, char *task, char *
 void remove_task( char* proj_name, char* username, char *task, char* buffer ) {
 
   char path[100];
-  sprintf(path, "projects/%s/%s/tasks.csv", username, proj_name);
+  sprintf(path, "users/%s/%s/tasks.csv", username, proj_name);
   char arr[100][4][1024];
   int r = parse_csv(path, arr);
 
