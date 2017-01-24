@@ -72,12 +72,14 @@ void sub_server( int sd ) {
   while (read( sd, buffer, sizeof(buffer) )) {
     printf("[SERVER %d] received: %s\n", pid, buffer );
     printf("HOME [before] = %d\t",HOME);
-    printf("PROJECT [before] = %d\n",PROJECT);
+    printf("PROJECT [before] = %d\t",PROJECT);
+    printf("TASK [before] = %d\n",TASK);
     
     if ( strcmp(buffer, "home") == 0){
       strcpy(buffer, home);
       HOME = 999;
       PROJECT = -1; //VERY IMPORTANT
+      TASK = -1;
     } else if (HOME == 999) {
       HOME = home_process(buffer, username);      
 
@@ -94,18 +96,25 @@ void sub_server( int sd ) {
       }
       HOME = 999;
       PROJECT = -1;
+      TASK = -1;
       /*PROJECT MANAGING LOOP*/
     } else if (HOME == 1) {
 
       if (PROJECT == -1) {
 	//paste all projs into buffer, set PROJECT
 	PROJECT = view_proj(buffer, username);
+
+      } else if (PROJECT && (TASK == -1)){
+	PROJECT = proj_process(buffer, PROJECT, username);
+	if (PROJECT == 1) {
+	  TASK = 0;
+	}
       } else if (PROJECT == 1) {
 	/*IN VIEWING TASKS MODE*/
 	
 	printf("TASK=%d\n", TASK);
 	
-	if (TASK == -1){
+	if (TASK == 0){
 	  TASK =  task_view(buffer, atoi(buffer), username);
 	} else {
 	  TASK = task_process(buffer, TASK, username);
@@ -113,9 +122,7 @@ void sub_server( int sd ) {
 	  PROJECT = -1;
 	}
 
-      } else if (PROJECT){
-	PROJECT = proj_process(buffer, PROJECT, username);
-
+      
       } else if (PROJECT == 2){
 	/* MINI TASK-ASSSIGNMENT LOOP */
 	char task[100][10];
@@ -129,7 +136,8 @@ void sub_server( int sd ) {
     }
 
     printf("HOME [after] = %d\t", HOME);
-    printf("PROJECT [after] = %d\n", PROJECT);
+    printf("PROJECT [after] = %d\t", PROJECT);
+    printf("TASK [after] = %d\n",TASK);
     write(sd, buffer, sizeof(buffer));
   }
 }
