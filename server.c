@@ -80,10 +80,12 @@ void sub_server( int sd ) {
       HOME = 999;
       PROJECT = -1; //VERY IMPORTANT
       TASK = -1;
+
     } else if (HOME == 999) {
       HOME = home_process(buffer, username);      
       TASK = -1;
       PROJECT = -1;
+
       /*PROJECT CREATION LOOP*/  
     } else if (HOME == 0) {      
       char new_proj_name[MESSAGE_BUFFER_SIZE];
@@ -98,6 +100,7 @@ void sub_server( int sd ) {
       HOME = 999;
       PROJECT = -1;
       TASK = -1;
+
       /*PROJECT MANAGING LOOP*/
     } else if (HOME == 1) {
 
@@ -105,16 +108,14 @@ void sub_server( int sd ) {
 	//paste all projs into buffer, set PROJECT
 	PROJECT = view_proj(buffer, username);
 
-      } else if (PROJECT && (TASK == -1)){
+      } else if ((PROJECT == 1 )&& (TASK == -1)){
 	PROJECT = proj_process(buffer, PROJECT, username);
 	if (PROJECT == 1) {
 	  TASK = 0;
 	}
       } else if (PROJECT == 1) {
 	/*IN VIEWING TASKS MODE*/
-	
 	printf("TASK=%d\n", TASK);
-	
 	if (TASK == 0){
 	  TASK =  task_view(buffer, atoi(buffer), username);
 	} else {
@@ -123,11 +124,12 @@ void sub_server( int sd ) {
 	  PROJECT = -1;
 	}
 
-      
-      } else if (PROJECT == 2){
+      } else if (PROJECT == 2) {
+	/* ADD MEMBER */
+      } else if (PROJECT == 3){
 	/* MINI TASK-ASSSIGNMENT LOOP */
 	char task[100][10];
-	//	strcpy(task, buffer);
+
 	printf("TASK_ASS LOOP: buffer: %s\n", buffer);
       } else {
 	
