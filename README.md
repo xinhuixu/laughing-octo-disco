@@ -44,6 +44,19 @@ user3/
 
 Projects a particular user manages are listed as directories within that user's directory. You can peruse the structure further in our repository, but this is all you need to understand how to test stuff out.
 
+### List of files
+
+#### DOCS
+* `DESIGN.pdf`, `DESIGN.txt`, `README.md`, `makefile`
+
+#### EVERYTHING ELSE LOL
+* `client.c`, `client.h`
+* `func.c`, `func.h`
+* `networking.c`, `networking.h`
+* `server.c`, `server.h`
+* `utils.c`, `utils.h`
+* `users/` (see above)
+
 ### Parting reminder!!
 
 We actually worked pretty hard on setting up the control flow AND setting up CSV reading/writing/editing!! You don't get to see some of that in our final product because integrating the two quickly became impossible (because of that wacky control flow mentioned earlier), but it is there! <3
