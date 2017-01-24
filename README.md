@@ -1,10 +1,9 @@
 # Systems final project - Nala Sharadjaya, Xinhui Xu
 
 ### How-to
-1. Compile
-`$ make`
+1. Compile: `$ make`
 1. Run `$ ./server` and up to as many `$ ./client` as you want from different terminal sessions.
-	- `$ ./client [ip]` for manual ip input 
+	* `$ ./client [ip]` for manual ip input 
 2. In `client`, create a new user by typing in whatever username you want!
 3. Create a new project by following the prompts (then create multiple if you want!). Then view your projects following the prompts.
 4. You can view your projects, enter them, and view your tasks. Other features vary in functionality...if you don't see a response you expect, you can type `>> home` to be escorted back to safety. Otherwise `CTRL+C` and start over!
@@ -16,14 +15,14 @@
 * Viewing all YOUR tasks (def)
 
 ### Things we didn't have time to properly integrate
-* Adding members and tasks (control flow turned out to be WICKED)
-* Editing status of tasks (^^)
+* Adding members and tasks 
+* Editing status of tasks
 * Removing things (tasks, projects, users)
 
 ### Things we did :)
-* Set up a clever and interesting control flow that turned out to be a lot more challenging than we expected!! Using numbers to tell the server where to go next requires forcing the server to pay SUPER close attention to where it is right now, and when the control flow isn't linear, that's mad hard.
-* Permissions when accessing projects and tasks. This was tedious and took longer than we predicted - figuring out who can access what where and when, setting up the directory structure (under `users/`)...it took a while!
-* Literally string manipulation in C. Was so hard!!!!
+* Set up an efficient and intuitive keyboard-only user-interface. Using numbers to tell the server where to go next requires forcing the server to pay close attention to where it is right now. When the control flow isn't linear, things got trickier exponentially.
+* Permissions when accessing projects and tasks. Figuring out who can access what where and when, setting up the directory structure (which had to be revamped many times).
+* Utilization of default C libraries to get things such as file manipulation, string wizadry, etc. done the basic but sturdy way. 
 
 ### `users/` structure
 
@@ -49,7 +48,7 @@ Projects a particular user manages are listed as directories within that user's 
 ### List of files
 
 #### DOCS
-* `DESIGN.pdf`, `DESIGN.txt`, `README.md`, `devlog.txt`, `makefile`
+* `DESIGN.pdf`, `DESIGN.txt`, `README.md`, `makefile`
 
 #### EVERYTHING ELSE LOL
 * `client.c`, `client.h`
