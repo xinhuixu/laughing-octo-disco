@@ -277,6 +277,22 @@ bool is_manager( char* username, char* proj_name ) {
   return false;*/
 }
 
+
+int task_view( char* buffer, int TASK, char* username){
+  
+  sprintf(buffer, "Mark task[%d]'s progress:\n\t[0]Not yet started\t[1]In progess\t[2]Complete", TASK);
+  return -1;
+}
+
+int task_process( char*buffer, int TASK, char* username ){
+  if (strcmp(buffer, "0") == 0){
+    //MARK NOT YET STARTED;
+    sprintf(buffer, "Marked.");
+  }
+    
+  return 0;
+}
+
 void all_tasks( char* buffer, char* username, char* proj_name ) {
 
   char *path; path = (char *)malloc(50 * sizeof(char *));
@@ -299,17 +315,19 @@ void all_tasks( char* buffer, char* username, char* proj_name ) {
   }
 
 }
-void my_tasks( char* buffer, char* username ) {
 
+void my_tasks( char* buffer, char* username ) {
+  int i = 1;
   char path[100];
   sprintf(path, "users/%s/pii.csv", username);
-
+  sprintf(buffer, "%s's tasks:\n", username);
+  
   char *task;
   task = (char *)malloc(50 * sizeof(char *));
 
   char arr[100][4][1024];
   int cols=1, rows=parse_csv(path, arr); int r=0, c=0;
-
+  
   for(r=0; r<rows; r++) {
     for(c=0; c<cols; c++) {
 
@@ -319,15 +337,16 @@ void my_tasks( char* buffer, char* username ) {
       
       for(r2=0; r2<rows2; r2++) {
 	if( strcmp(arr2[r2][0], username) == 0 ) {
-	  sprintf(task, "\t[%s] [%s] %s\n", arr[r][c], arr2[r2][2], arr2[r2][1]);
+	  sprintf(task, "\t[%d] [%s] [%s] %s\n", i, arr[r][c], arr2[r2][2], arr2[r2][1]);
 	  strcat(buffer, task);
+	  i++;
 	}
       }
-
     }
   }
-  
+  strcat(buffer, "Enter the task number to edit.");
 }
+
 void add_task( char* buffer, char* proj_name, char* username, char *task, char *deadline ) {
 
   char path[100];
