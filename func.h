@@ -27,5 +27,5 @@ void add_task( char*, char*, char*, char*, char* );
 void remove_task( char*, char*, char*, char* );
 void remove_member( char* );
 void add_member( char* );
-void update_status( char*, char*, char*, char* );
+void update_status( char*, char*, char*, char*, int );
 #endif
