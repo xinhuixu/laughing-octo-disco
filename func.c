@@ -395,19 +395,21 @@ void add_member( char* buffer, char* username, char* proj_name, char* new_member
   
   char path[100];
   char msg[100];
+  int rows;
+  char arr[100][4][1024];
+  char arr2[100][4][1024];
 
   if( is_manager(username, proj_name) ) {
     sprintf(path, "users/%s/pii.csv", new_member);
     sprintf(msg, "%s/%s", username, proj_name);
-    char arr[100][4][1024];
     rows = parse_csv(path, arr);
-    sprintf( arr2[rows][0], msg );
-    write_to_file(path, r, rows+1, 1);
+    sprintf( arr2[rows][0], "%s", msg );
+    write_to_file(path, arr, rows+1, 1);
     
     sprintf(path, "users/%s/%s/members.csv", username, proj_name);
-    
     rows = parse_csv(path, arr2);
-    strcpy( arr2[rows][0], new_member );
+    sprintf( arr2[rows][0], "%s", new_member );
+    write_to_file(path, arr2, rows+1, 1);
     sprintf(msg, "%s successfully added to %s.\n", new_member, proj_name);
   } else {
     sprintf(msg, "Sorry, you are not authorized to do that.\n");
