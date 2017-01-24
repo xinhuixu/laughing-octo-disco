@@ -22,3 +22,25 @@
 * Set up a clever and interesting control flow that turned out to be a lot more challenging than we expected!! Using numbers to tell the server where to go next requires forcing the server to pay SUPER close attention to where it is right now, and when the control flow isn't linear, that's mad hard.
 * Permissions when accessing projects and tasks. This was tedious and took longer than we predicted - figuring out who can access what where and when, setting up the directory structure (under `users/`)...it took a while!
 * Literally string manipulation in C. Was so hard!!!!
+
+### `users/` structure
+
+Note: you can either create your own new user when running `client.c` for the first time or use an existing user, see below.
+
+```
+    users/
+        user1/
+	    aardvark/
+	    baboon/
+	    camel/
+	user2/
+	    dog/
+	    elephant/
+	    flamingo/
+	user3/
+	    giraffe/
+	    hippo/
+	    iguana/
+```
+
+Projects a particular user manages are listed as directories within that user's directory. You can peruse the structure further in our repository, but this is all you need to understand how to test stuff out.
