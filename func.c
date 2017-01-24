@@ -239,7 +239,7 @@ int proj_process( char* buffer, int proj_num, char* username ){
     if (is_manager(username, proj)){
 
       sprintf(buffer, "What task are you assigning?:");
-      return 2;
+      return 3;
     } else { //not a manager
       sprintf(buffer, "You are not authorized to use this command.\n");
       char num[500]; sprintf(num, "%d", proj_num);
@@ -291,14 +291,16 @@ int task_view( char* buffer, int TASK, char* username){
 }
 
 int task_process( char*buffer, int TASK, char* username ){
+  char backhome[200];
+  strcpy(backhome, "You might thought you have updated the status of the task. But unfortunately, we were unable to do that. We're sending you back home.\n[0]New project\t[1]My projects");
   if (strcmp(buffer, "0") == 0){
-    sprintf(buffer, "Marked: Not yet started.\n[0]New project\t[1]My projects");
+    sprintf(buffer, "Marked: Not yet started.\n%s", backhome);
 
   } else if (strcmp(buffer, "1") == 0) {
-    sprintf(buffer, "Marked: In progress.\n[0]New project\t[1]My projects");
+    sprintf(buffer, "Marked: In progress.\n%s", backhome);
 
   } else if (strcmp(buffer, "2") == 0) {
-    sprintf(buffer, "Marked: Complete.\n[0]New project\t[1]My projects");
+    sprintf(buffer, "Marked: Complete.\n%s", backhome);
 
   }    
   return -999;
