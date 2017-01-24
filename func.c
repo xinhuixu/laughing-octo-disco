@@ -254,14 +254,6 @@ int proj_process( char* buffer, int proj_num, char* username ){
   return -1;
 }
 
-/*get_manager(manager, project name)
-populate manager with the manager of the project*/
-void get_manager( char* manager, char* proj_name ){
-
-
-
-}
-
 bool is_manager( char* username, char* proj_name ) {
   char path[100]; char *str;
   sprintf(path, "users/%s/pii.csv", username);
