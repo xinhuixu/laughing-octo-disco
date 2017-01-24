@@ -29,14 +29,17 @@ Note: you can either create your own new user when running `client.c` for the fi
 
 ```
 users/
+
     user1/
         aardvark/
 	baboon/
 	camel/
+	
     user2/
         dog/
         elephant/
 	flamingo/
+	
     user3/
 	giraffe/
 	hippo/
