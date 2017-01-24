@@ -233,11 +233,7 @@ int proj_process( char* buffer, int proj_num, char* username ){
   } else if (strcmp(buffer, "3") == 0){
     /*TODO: new task, manager only*/
     /*CHECK IS MANAGER LOOP*/
-    char proj[100];
-    char num[4]; sprintf(num, "%d", proj_num);
-    get_proj_name(proj, username, num);
-    if (is_manager(username, proj)){
-
+    if (is_manager(username, proj_name)){
       sprintf(buffer, "What task are you assigning?:");
       return 3;
 
@@ -256,19 +252,7 @@ int proj_process( char* buffer, int proj_num, char* username ){
 }
 
 bool is_manager( char* username, char* proj_name ) {
-  char path[100]; char *str;
-  sprintf(path, "users/%s/pii.csv", username);
-  str = (char *)malloc(50 * sizeof(char *));
-
-  char arr[100][4][1024];
-  int rows = parse_csv(path, arr); int r=0;
-  sprintf(str, "%s", proj_name);
-  for( r=0; r<rows; r++ ) {
-    if( strcmp(arr[r][0], str) == 0 )
-      return true;
-  }
-
-  return false;
+  return (strncmp(username, proj_name, strlen(username)) == 0);
 }
 
 int task_view( char* buffer, int TASK, char* username){
@@ -351,15 +335,21 @@ void my_tasks( char* buffer, char* username, char* proj_name ) {
 void add_task( char* buffer, char* proj_name, char* username, char *task, char *deadline ) {
 
   char path[100];
+  char *msg; msg = (char *)malloc(50 * sizeof(char *));
+  
   sprintf(path, "users/%s/%s/tasks.csv", username, proj_name);
   char arr[100][4][1024];
   int r = parse_csv(path, arr);
 
   int a = add_row(path, arr, username, task, deadline, "Not yet started", r, 4);
-  if( a == r+1 )
-    sprintf(buffer, "Great! You successfully added assigned %s [%s], due %s.\n", username, task, deadline);
-  else
-    sprintf(buffer, "Sorry! This task was not added.\n");
+  if( a == r+1 ) {
+    sprintf(msg, "Great! You successfully added assigned %s [%s], due %s.\n", username, task, deadline);
+    strcat(buffer, msg);
+  }
+  else {
+    sprintf(msg, "Sorry! This task was not added.\n");
+    strcat(buffer, msg);
+  }
   
 }
 
@@ -371,9 +361,9 @@ void remove_task( char* proj_name, char* username, char *task, char* buffer ) {
   int r = parse_csv(path, arr);
 
   int rem = remove_row(path, arr, username, task, r, 4);
-  if( rem == r-1 )
+  if( rem == r-1 ) 
     sprintf(buffer, "Great! You successfully removed [%s] from %s.\n", task, username);
-  else
+  else 
     sprintf(buffer, "Sorry! This task was not removed.\n");
   
 }
