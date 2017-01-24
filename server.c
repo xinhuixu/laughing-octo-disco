@@ -73,7 +73,7 @@ void sub_server( int sd ) {
     printf("[SERVER %d] received: %s\n", pid, buffer );
     printf("HOME [before] = %d\t",HOME);
     printf("PROJECT [before] = %d\n",PROJECT);
-
+    
     if ( strcmp(buffer, "home") == 0){
       strcpy(buffer, home);
       HOME = 999;
@@ -93,7 +93,7 @@ void sub_server( int sd ) {
 	sprintf(buffer, "Project already exists.\n%s", home);
       }
       HOME = 999;
-
+      PROJECT = -1;
       /*PROJECT MANAGING LOOP*/
     } else if (HOME == 1) {
 
@@ -104,11 +104,13 @@ void sub_server( int sd ) {
 	/*IN VIEWING TASKS MODE*/
 	
 	printf("TASK=%d\n", TASK);
-
+	
 	if (TASK == -1){
 	  TASK =  task_view(buffer, atoi(buffer), username);
 	} else {
 	  TASK = task_process(buffer, TASK, username);
+	  HOME = 999;
+	  PROJECT = -1;
 	}
 
       } else if (PROJECT){

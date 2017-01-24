@@ -283,21 +283,21 @@ bool is_manager( char* username, char* proj_name ) {
 int task_view( char* buffer, int TASK, char* username){
   
   sprintf(buffer, "Mark task[%d]'s progress:\n\t[0]Not yet started\t[1]In progess\t[2]Complete", TASK);
-  return -1;
+  return 0;
 }
 
 int task_process( char*buffer, int TASK, char* username ){
   if (strcmp(buffer, "0") == 0){
-    sprintf(buffer, "Marked: Not yet started.");
-    return 0;
+    sprintf(buffer, "Marked: Not yet started.\n[0]New project\t[1]My projects");
+
   } else if (strcmp(buffer, "1") == 0) {
-    sprintf(buffer, "Marked: In progress.");
-    return 0;
+    sprintf(buffer, "Marked: In progress.\n[0]New project\t[1]My projects");
+
   } else if (strcmp(buffer, "2") == 0) {
-    sprintf(buffer, "Marked: Complete.");
-    return 0;
+    sprintf(buffer, "Marked: Complete.\n[0]New project\t[1]My projects");
+
   }    
-  return 0;
+  return -999;
 }
 
 void all_tasks( char* buffer, char* username, char* proj_name ) {
