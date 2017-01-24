@@ -83,6 +83,7 @@ bool list_projs( char* buffer, char* username ){
     for(c=0; c<cols; c++) {
       sprintf(proj, "\t[%d] %s\n", i, arr[r][c]);
       strcat(buffer, proj);
+      i++;
     }
   }
 
