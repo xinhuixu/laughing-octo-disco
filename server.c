@@ -70,7 +70,7 @@ void sub_server( int sd ) {
   /* READ/WRITE TO SD LOOP */
   while (read( sd, buffer, sizeof(buffer) )) {
     printf("[SERVER %d] received: %s\n", pid, buffer );
-    printf("HOME = %d\n",HOME);
+    printf("HOME [before inner gates] = %d\n",HOME);
 
     if ( strcmp(buffer, "home") == 0){
       strcpy(buffer, home);
@@ -113,6 +113,7 @@ void sub_server( int sd ) {
       exit(0);
     }
 
+    printf("HOME [after inner gate] = %d\n", HOME);
     write(sd, buffer, sizeof(buffer));
   }
 }
