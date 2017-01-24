@@ -406,32 +406,17 @@ void update_status( char* buffer, char *username, char *proj_name, char *task, i
 
   char path[100];
   sprintf(path, "users/%s/%s/tasks.csv", username, proj_name);
-  //sprintf(path, "users/%s/tasks.csv", proj_name);
 
   char arr[100][4][1024];
   int rows = parse_csv(path, arr); int r=0;
-  char *curr; curr = (char *)malloc(50 * sizeof(char *));
   char *msg; msg = (char *)malloc(50 * sizeof(char *));
   int edit = 0;
-  
-  for(r=0; r<rows; r++) {
-    if( strcmp(arr[r][1], task) == 0 ) {
-      sprintf(curr, "%s", arr[r][3]);
-      break;
-    }
-  }
-  
-  if( strcmp(curr, "Not yet started") == 0 ) {
-    if( new == 0 )
-      edit = edit_status(arr, username, task, "In progress", rows, 4);
-    else if( new == 1 )
-      edit = edit_status(arr, username, task, "Complete", rows, 4);
-  } else if ( strcmp(curr, "In progress") == 0 ) {
-    if( new == 1 )
-      edit = edit_status(arr, username, task, "Complete", rows, 4);
-  } else {
-    ;
-  }
+  if (new == 0)
+    edit = edit_status(path, arr, username, task, "Not yet started", rows, 4);
+  else if (new == 1)
+    edit = edit_status(path, arr, username, task, "In progress", rows, 4);
+  else
+    edit = edit_status(path, arr, username, task, "Complete", rows, 4);
 
   if( edit )
     sprintf(msg, "[%s] is [%s]\n", arr[r][1], arr[r][3]);
