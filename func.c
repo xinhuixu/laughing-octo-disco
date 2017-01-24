@@ -280,7 +280,6 @@ bool is_manager( char* username, char* proj_name ) {
   return false;*/
 }
 
-
 int task_view( char* buffer, int TASK, char* username){
   
   sprintf(buffer, "Mark task[%d]'s progress:\n\t[0]Not yet started\t[1]In progess\t[2]Complete", TASK);
@@ -458,7 +457,7 @@ void parse(char *line, char **argv){
   *argv = '\0';                 /* mark the end of argument list  */
 }
 
-void  execute(char **argv)
+void execute(char **argv)
 {
   pid_t  pid;
   int    status;

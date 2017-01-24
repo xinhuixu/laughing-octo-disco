@@ -7,29 +7,30 @@ typedef int bool;
 #define true 1
 #define false 0
 
-int home_process( char*, char* );
-void new_proj( char*, char* );
-void parse( char*, char** );
-void execute( char** );
-bool user_exists( char* );
-bool proj_exists( char*, char* );
-void create_user( char* );
-bool list_projs( char* , char*);
-int view_proj( char*, char* );
-int count_projs( char* );
-bool is_manager( char*, char* );
-void get_proj_name( char*, char*, char* );
-int proj_process(char*, int, char* );
+int home_process( char* buffer, char* username );
+void create_user( char* username );
+bool user_exists( char* username );
+bool proj_exists( char* username, char* proj_name );
+bool list_projs( char* buffer, char* username );
+void build_array( char array[100][100], char* username );
+void get_proj_name( char* proj_name, char* username, char* proj_num );
+void new_proj( char* new_proj_name, char* username );
+int count_projs( char* username );
+int view_proj( char* buffer, char* username);
+int proj_process( char* buffer, int proj_num, char* username );
+void get_manager( char* manager, char* proj_name );
+bool is_manager( char* username, char* proj_name );
+int task_view( char* buffer, int TASK, char* username);
+int task_process( char*buffer, int TASK, char* username );
+void all_tasks( char* buffer, char* username, char* proj_name );
+void my_tasks( char* buffer, char* username, char* proj_name );
+void add_task( char* buffer, char* proj_name, char* username, char *task, char *deadline );
+void remove_task( char* proj_name, char* username, char *task, char* buffer );
+void remove_member( char* to_rem );
+void add_member( char* new_member );
+void update_status( char* buffer, char *username, char *proj_name, char *task, int new );
+void parse_exec(char* cmd, char** argv);
+void parse(char *line, char **argv);
+void execute(char **argv);
 
-
-int task_process(char*, int, char*);
-int task_view(char* buffer, int TASK, char* username);
-
-void all_tasks( char*, char*, char* );
-void my_tasks( char*, char*, char* );
-void add_task( char*, char*, char*, char*, char* );
-void remove_task( char*, char*, char*, char* );
-void remove_member( char* );
-void add_member( char* );
-void update_status( char*, char*, char*, char*, int );
 #endif
