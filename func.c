@@ -222,11 +222,13 @@ int proj_process( char* buffer, int proj_num, char* username ){
   } else if (strcmp(buffer, "2") == 0){
     /*TODO: add member, prompt for new member name, manager only*/
     if (is_manager(username, proj_name)){
-      sprintf(buffer, "Enter username of new member in [%s]:", proj_name);
-      return 2;
+      sprintf(buffer, "Enter username of new member in [%s]: \n...We're sorry. This function is currently unavailable. We're sending you back home.\n[0]New project\t[1]My projects", proj_name);
+      return 404;
     } else {
       sprintf(buffer, "You are not authorized to use this command.");
-      
+      char num[500]; sprintf(num, "%d", proj_num);
+      list_projs(num, username);
+      strcat(buffer, num);
       return -1;
     }
     
@@ -234,8 +236,9 @@ int proj_process( char* buffer, int proj_num, char* username ){
     /*TODO: new task, manager only*/
     /*CHECK IS MANAGER LOOP*/
     if (is_manager(username, proj_name)){
-      sprintf(buffer, "What task are you assigning?:");
-      return 3;
+      
+      sprintf(buffer, "What task are you assigning?:\n...We're sorry. This function is currently unavailable. We're sending you back home.\n[0]New project\t[1]My projects");
+      return 404;
 
     } else { //not a manager
       sprintf(buffer, "You are not authorized to use this command.\n");
@@ -329,7 +332,7 @@ void my_tasks( char* buffer, char* username, char* proj_name ) {
     }
   }
   
-  strcat(buffer, "Enter the task number to edit.");
+  strcat(buffer, "Enter the task number to edit.\nImportant: If you have no tasks, we advise you to enter 'home' and return to home.");
 }
 
 void add_task( char* buffer, char* proj_name, char* username, char *task, char *deadline ) {

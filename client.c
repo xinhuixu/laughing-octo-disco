@@ -12,16 +12,26 @@
 
 #include "networking.h"
 
-char* prompt(){
+
+void first_prompt(){
+  char *p;
+  p = (char *) malloc(sizeof(char)*100);
+  strcpy(p, "\nWelcome to Grape^tm (beta)! To get started, type in a username. Then follow the prompts!\n>> ");
+  printf("%s", p);
+  free(p);
+}
+
+void prompt(){
   char *p;
   p = (char *) malloc(sizeof(char)*3);
-  strcpy(p, ">>");
+  strcpy(p, ">> ");
   printf("%s", p);
-  return p;
+  free(p);
 }
 
 int main( int argc, char *argv[] ) {
-
+  int first = 1;
+  
   char *host;
   if (argc != 2 ) {
     printf("host not specified, conneting to 127.0.0.1\n");
@@ -38,7 +48,13 @@ int main( int argc, char *argv[] ) {
   
   
   while (1) {
-    prompt();
+    if (first) {
+      first_prompt();
+      first = 0;
+    }
+    else {
+      prompt();
+    }
     fgets( buffer, sizeof(buffer), stdin );
 
     char *p = strchr(buffer, '\n');

@@ -46,7 +46,7 @@ void sub_server( int sd ) {
   int HOME = -1;
   int PROJECT = -1;
   int TASK = -1;
-  int add = -1;
+
   char buffer[MESSAGE_BUFFER_SIZE];
   char home[MESSAGE_BUFFER_SIZE];
   strcpy(home, "[0]New project\t[1]My projects");
@@ -82,7 +82,7 @@ void sub_server( int sd ) {
       PROJECT = -1; //VERY IMPORTANT
       TASK = -1;
 
-    } else if (HOME == 999) {
+    } else if ((HOME == 999) || (PROJECT == 404)) {
       HOME = home_process(buffer, username);      
       TASK = -1;
       PROJECT = -1;
@@ -104,7 +104,7 @@ void sub_server( int sd ) {
 
       /*PROJECT MANAGING LOOP*/
     } else if (HOME == 1) {
-
+      
       if (PROJECT == -1) {
 	//paste all projs into buffer, set PROJECT
 	PROJECT = view_proj(buffer, username);
@@ -114,12 +114,9 @@ void sub_server( int sd ) {
 	if (PROJECT == 1)
 	  TASK = 0;
 	
-      } else if ( PROJECT && (TASK == -1 ) && (add = -1) ) {
+      } else if ( PROJECT && (TASK == -1 ) ) {
 	PROJECT = proj_process(buffer, PROJECT, username);
-	if (PROJECT == 2)
-	  add = 2;
-	if (PROJECT == 3)
-	  add = 3;
+
       } else if (PROJECT == 1) {
 	/*IN VIEWING TASKS MODE*/
 	printf("TASK=%d\n", TASK);
@@ -131,20 +128,21 @@ void sub_server( int sd ) {
 	  PROJECT = -1;
 	}
 
-      } else if ((PROJECT == 2) && (add == 2)) {
-	/* ADD MEMBER */
-      } else if ((PROJECT == 3) && (add == 3)){
-	/* MINI TASK-ASSSIGNMENT LOOP */
-	char task[100][10];
-
-	printf("TASK_ASS LOOP: buffer: %s\n", buffer);
+ 
+      /* } else if ((PROJECT == 2) ) { */
+      /* 	/\* ADD MEMBER *\/ */
+      /* } else if ((PROJECT == 3) ){ */
+      /* 	/\* MINI TASK-ASSSIGNMENT LOOP *\/ */
+      /* 	char task[100][10]; */
+      /* 	printf("TASK_ASS LOOP: buffer: %s\n", buffer); */
 	
       } else {
-	
+	sprintf(buffer, "Something's wrong. Enter 'home' to return home.");
       }
       
-    } else if ( strcmp(buffer, "exit") == 0){
-      exit(0);
+    } else {
+
+      	sprintf(buffer, "Something's wrong. Enter 'home' to return home.");
     }
 
     printf("HOME [after] = %d\t", HOME);
