@@ -66,53 +66,20 @@ bool proj_exists( char* username, char* proj_name ){
 }
 
 void list_projs( char* buffer, char* username ){
+
   DIR *d = NULL; struct dirent *de = NULL;
-  DIR *sub = NULL; struct dirent *subde = NULL;
   char path[100];
-  char *proj; proj = (char *)malloc(50 * sizeof(char));
-  int i = 1;
-
-  sprintf(path, "projects");
+  char *proj; proj = (char *)malloc(50 * sizeof(char *));
+  sprintf(path, "projects/%s", username);
   d = opendir(path);
-  while( (de = readdir(d)) ) {
-    printf("de->d_name: %s\n", de->d_name);
+  int i = 0;
+  while ( (de = readdir(d)) ) {
     if( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
-      
-      printf("now i am here\n");
-    }
-    else if( (strcmp(de->d_name, username) == 0) ) {
-      printf("hit my own folder!\n");
-      sprintf(proj, "\t[%d]\%s\n", i, de->d_name);
+      ;
+    } else {
+      sprintf(proj, "\t[%d] %s\n", i, de->d_name);
       strcat(buffer, proj);
-      free(proj);
       i++;
-    }
-    else {
-      printf("hit someone else's folder!");
-      printf("subde->d_name: %s\n", subde->d_name);
-      while( (subde = readdir(sub)) ) {
-	if( (strcmp(subde->d_name, ".") == 0) || (strcmp(subde->d_name, "..") == 0) ) {
-	  ;
-	}
-	else {
-	  sprintf(path, "projects/%s/%s/members.csv", de->d_name,subde->d_name);
-	  printf("path: %s\n", path);
-	  char arr[100][4][1024];
-	  int cols=1, rows=parse_csv(path, arr); int r=0, c=0;
-	  for(r=0; r<rows; r++) {
-	    for(c=0; c<cols; c++) {
-	      if( strncmp(username, arr[r][c], strlen(username)) == 0 ) {
-		char *proj;
-		sprintf(proj, "\t[%d]%s\n", i, subde->d_name);
-		strcat(buffer, proj);
-		free(proj);
-
-		i++;
-	      }
-	    }
-	  }
-	}
-      }
     }
   }
   
