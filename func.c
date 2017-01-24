@@ -296,7 +296,7 @@ void my_tasks( char* buffer, char* username ) {
       
       for(r2=0; r2<rows2; r2++) {
 	if( strcmp(arr2[r2][0], username) == 0 ) {
-	  sprintf(task, "\t[%s] %s\n", arr2[r2][2], arr2[r2][1]);
+	  sprintf(task, "\t[%s] [%s] %s\n", arr[r][c], arr2[r2][2], arr2[r2][1]);
 	  strcat(buffer, task);
 	}
       }
