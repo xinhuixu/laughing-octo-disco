@@ -1,11 +1,13 @@
 # Systems final project - Nala Sharadjaya, Xinhui Xu
 
 ### How-to
-1. Compile and run `server` and `client` from two different terminal prompts.
-(1b. Type `./client [manual ip]` for functionality on ANY computer!)
+1. Compile
+`$ make`
+1. Run `$ ./server` and up to as many `$ ./client` as you want from different terminal sessions.
+	- `$ ./client [ip]` for manual ip input 
 2. In `client`, create a new user by typing in whatever username you want!
-3. Create a new project by following the prompts (create multiple if you want!). Then view your projects following the prompts.
-4. You can view your projects, enter them, and view your tasks. Other features vary in functionality...if you don't see a response you expect, you can type `home` to see if that will redirect you. Otherwise `CTRL+C` and start over!
+3. Create a new project by following the prompts (then create multiple if you want!). Then view your projects following the prompts.
+4. You can view your projects, enter them, and view your tasks. Other features vary in functionality...if you don't see a response you expect, you can type `>> home` to be escorted back to safety. Otherwise `CTRL+C` and start over!
 
 ### Things that will work on a scale of probably to definitely
 * Creating a new user (def)
@@ -59,4 +61,4 @@ Projects a particular user manages are listed as directories within that user's 
 
 ### Parting reminder!!
 
-We actually worked pretty hard on setting up the control flow AND setting up CSV reading/writing/editing!! You don't get to see some of that in our final product because integrating the two quickly became impossible (because of that wacky control flow mentioned earlier), but it is there! <3
+We have put a great effort into setting up the server-side control AND setting up CSV reading/writing/editing! Sadly, you don't get to see some of those in our final product because we did not manage to integrate them with the wacky, bloated, wobbly control (which for the most part were functioning). Some written but unfortunately unused functions are still contained in `func.c`.
