@@ -60,4 +60,4 @@ Projects a particular user manages are listed as directories within that user's 
 
 ### Parting reminder!!
 
-We have put a great effort into setting up the server-side control AND setting up CSV reading/writing/editing! Sadly, you don't get to see some of those in our final product because we did not manage to integrate them with the wacky, bloated, wobbly control (which for the most part were functioning). Some written but unfortunately unused functions are still contained in `func.c`.
+We have put a great effort into setting up the server-side control AND setting up CSV reading/writing/editing! Sadly, you don't get to see some of those in our final product because we did not manage to integrate them with the wacky, bloated, wobbly control (but which for the most part was functioning...). Some written but unfortunately unused functions are still contained in `func.c`.
