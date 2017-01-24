@@ -313,7 +313,7 @@ void all_tasks( char* buffer, char* username, char* proj_name ) {
     int rows=parse_csv(path, arr); int r=0;
 
     for(r=0; r<rows; r++) {
-      sprintf(task, "%s - [%s] %s - %s", arr[r][0], arr[r][1], arr[r][2], arr[r][3]);
+      sprintf(task, "%s - [%s] %s - %s\n", arr[r][0], arr[r][1], arr[r][2], arr[r][3]);
       strcat(buffer, task);
     }
     
@@ -343,7 +343,8 @@ void my_tasks( char* buffer, char* username, char* proj_name ) {
       
       for(r2=0; r2<rows2; r2++) {
 	if( strcmp(arr2[r2][0], username) == 0 ) {
-	  sprintf(task, "\t[%d] [%s] [%s] %s\n", i, arr[r][0], arr2[r2][2], arr2[r2][1]);
+	  //[increment] proj name [deadline]: task name, status
+	  sprintf(task, "\t[%d] %s [%s]: %s, %s\n", i, arr[r][0], arr2[r2][2], arr2[r2][1], arr2[r2][3]gi);
 	  strcat(buffer, task);
 	  i++;
 	}
