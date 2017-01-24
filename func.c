@@ -220,11 +220,8 @@ int proj_process( char* buffer, int proj_num, char* username ){
 
   } else if (strcmp(buffer, "2") == 0){
     /*TODO: add member, prompt for new member name, manager only*/
-    char proj[100];
-    char num[4]; sprintf(num, "%d", proj_num);
-    get_proj_name(proj, username, num);
-    if (is_manager(username, proj)){
-      sprintf(buffer, "Enter username of new member in [%s]:", proj);
+    if (is_manager(username, proj_name)){
+      sprintf(buffer, "Enter username of new member in [%s]:", proj_name);
       return 2;
     } else {
       sprintf(buffer, "You are not authorized to use this command.");
@@ -393,16 +390,26 @@ void remove_task( char* proj_name, char* username, char *task, char* buffer ) {
   
 }
 
-void add_member( char* new_member );
+void add_member( char* buffer, char* username, char* proj_name, char* new_member ) {
+  
+  char path[100];
+  char msg[100];
 
-/* NOTES ON UPDATE_STATUS FOR XINHUI RE: SERVER SIDE:
-   - if update_status is being called from a place that uses proj_num (I was sort unclear on when that happens), then use the second, currently commented out, sprintf line, otherwise keep the first one (username is required as a param regardless)
-   - make it so that the user only has 2 choices for updating status: 
-     [0] In progress
-     [1] Complete
-   - and pass that INT to this function, which error handles the rest
-   - also prompt the user for the next thing at the end of this fxn where I indicated
-*/
+  if( is_manager(username, proj_name) ) {
+    sprintf(path, "users/%s/%s/members.csv", username, proj_name);
+
+    char arr[100][4][1024];
+    int rows = parse_csv(path, arr) + 1;
+
+    strcpy( arr[rows][0], new_member );
+    sprintf(msg, "%s successfully added to %s.\n", new_member, proj_name);
+  } else {
+    sprintf(msg, "Sorry, you are not authorized to do that.\n");
+  }
+
+  strcat(buffer, msg);
+
+}
 
 void update_status( char* buffer, char *username, char *proj_name, char *task, int new ) {
 
