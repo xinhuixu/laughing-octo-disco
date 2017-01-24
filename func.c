@@ -344,7 +344,7 @@ void my_tasks( char* buffer, char* username, char* proj_name ) {
       for(r2=0; r2<rows2; r2++) {
 	if( strcmp(arr2[r2][0], username) == 0 ) {
 	  //[increment] proj name [deadline]: task name, status
-	  sprintf(task, "\t[%d] %s [%s]: %s, %s\n", i, arr[r][0], arr2[r2][2], arr2[r2][1], arr2[r2][3]gi);
+	  sprintf(task, "\t[%d] %s [%s]: %s, %s\n", i, arr[r][0], arr2[r2][2], arr2[r2][1], arr2[r2][3]);
 	  strcat(buffer, task);
 	  i++;
 	}
