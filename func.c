@@ -201,10 +201,12 @@ int view_proj( char* buffer, char* username){
 
 int proj_process( char* buffer, int proj_num, char* username ){
   if (strcmp(buffer, "0") == 0){
-    /*TODO: PASTE ALL TASKS INTO BUFFER*/
+    char *proj_name; proj_name = (char *)malloc(50 * sizeof(char *));
+    char num[4]; sprintf(num, "%d", proj_num);
+    get_proj_name( proj_name, username, num );
+    all_tasks( buffer, username, proj_name );
     return 0;
   } else if (strcmp(buffer, "1") == 0){
-    /*TODO: PASTE THIS username'S TASKS INTO BUFFER*/
     my_tasks(buffer, username);
     return 1;
   } else if (strcmp(buffer, "2") == 0){
@@ -275,6 +277,7 @@ bool is_manager( char* username, char* proj_name ) {
   return false;*/
 }
 
+
 int task_view( char* buffer, int TASK, char* username){
   
   sprintf(buffer, "Mark task[%d]'s progress:\n\t[0]Not yet started\t[1]In progess\t[2]Complete", TASK);
@@ -289,7 +292,30 @@ int task_process( char*buffer, int TASK, char* username ){
     
   return 0;
 }
-void all_tasks( char* buffer, char* username );
+
+void all_tasks( char* buffer, char* username, char* proj_name ) {
+
+  char *path; path = (char *)malloc(50 * sizeof(char *));
+  char *task; task = (char *)malloc(50 * sizeof(char *));
+
+  if( is_manager(username, proj_name) ) {
+
+    sprintf(path, "users/%s/tasks.csv", proj_name);
+    printf("path: %s\n", path);
+    char arr[100][4][1024];
+    int rows=parse_csv(path, arr); int r=0;
+
+    for(r=0; r<rows; r++) {
+      sprintf(task, "%s - [%s] %s - %s", arr[r][0], arr[r][1], arr[r][2], arr[r][3]);
+      strcat(buffer, task);
+    }
+    
+  } else {
+    strcat(buffer, "You are not authorized to use this command.");
+  }
+
+}
+
 void my_tasks( char* buffer, char* username ) {
   int i = 1;
   char path[100];
@@ -353,7 +379,57 @@ void remove_task( char* proj_name, char* username, char *task, char* buffer ) {
 
 void remove_member( char* to_rem );
 void add_member( char* new_member );
-void update_status( char* buffer, char *username, char *task, char *new );
+
+
+/* NOTES ON UPDATE_STATUS FOR XINHUI RE: SERVER SIDE:
+   - if update_status is being called from a place that uses proj_num (I was sort unclear on when that happens), then use the second, currently commented out, sprintf line, otherwise keep the first one (username is required as a param regardless)
+   - make it so that the user only has 2 choices for updating status: 
+     [0] In progress
+     [1] Complete
+   - and pass that INT to this function, which error handles the rest
+   - also prompt the user for the next thing at the end of this fxn where I indicated
+*/
+
+void update_status( char* buffer, char *username, char *proj_name, char *task, int new ) {
+
+  char path[100];
+  sprintf(path, "users/%s/%s/tasks.csv", username, proj_name);
+  //sprintf(path, "users/%s/tasks.csv", proj_name);
+
+  char arr[100][4][1024];
+  int rows = parse_csv(path, arr); int r=0;
+  char *curr; curr = (char *)malloc(50 * sizeof(char *));
+  char *msg; msg = (char *)malloc(50 * sizeof(char *));
+  int edit = 0;
+  
+  for(r=0; r<rows; r++) {
+    if( strcmp(arr[r][1], task) == 0 ) {
+      sprintf(curr, arr[r][3]);
+      break;
+    }
+  }
+  
+  if( strcmp(curr, "Not yet started") == 0 ) {
+    if( new == 0 )
+      edit = edit_status(arr, username, task, "In progress", rows, 4);
+    else if( new == 1 )
+      edit = edit_status(arr, username, task, "Complete", rows, 4);
+  } else if ( strcmp(curr, "In progress") == 0 ) {
+    if( new == 1 )
+      edit = edit_status(arr, username, task, "Complete", rows, 4);
+  } else {
+    ;
+  }
+
+  if( edit )
+    sprintf(msg, "[%s] is [%s]\n", arr[r][1], arr[r][3]);
+  else
+    sprintf(msg, "Whoops! Something went wrong.\n");
+
+  strcat(buffer, msg);
+  //@XINHUI: also strcat to buffer whatever comes after edit status in ur control flow logicg
+  
+}
 
 /* borrowed from http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/exec.html */
 /* lmao were not using this probably*/
