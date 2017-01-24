@@ -152,18 +152,18 @@ void new_proj( char* new_proj_name, char* username ){
 }
 
 int count_projs( char* username ){
-  DIR *d = NULL; struct dirent *de = NULL;
   char path[100];
-  int i = 0;
-  sprintf(path, "users/%s", username);  
-  d = opendir(path);  
-  while ( (de = readdir(d)) ){
-    if ( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) ) {
-      ;
-    } else {
+  sprintf(path, "users/%s/pii.csv", username);
+
+  int i=0;
+  char arr[100][4][1024];
+  int rows = parse_csv(path, arr), cols=1; int r=0, c=0;
+  for(r=0; r<rows; r++) {
+    for(c=0; c<cols; c++) {
       i++;
     }
   }
+  printf("count_projs for %s returns: %d\n", username, i);
   return i;
 }
 
@@ -240,6 +240,7 @@ int proj_process( char* buffer, int proj_num, char* username ){
 
       sprintf(buffer, "What task are you assigning?:");
       return 3;
+
     } else { //not a manager
       sprintf(buffer, "You are not authorized to use this command.\n");
       char num[500]; sprintf(num, "%d", proj_num);

@@ -110,9 +110,12 @@ void sub_server( int sd ) {
 
       } else if ((PROJECT == 1 )&& (TASK == -1)){
 	PROJECT = proj_process(buffer, PROJECT, username);
-	if (PROJECT == 1) {
+	if (PROJECT == 1)
 	  TASK = 0;
-	}
+	
+      } else if ( PROJECT && (TASK == -1 )) {
+	PROJECT = proj_process(buffer, PROJECT, username);
+	
       } else if (PROJECT == 1) {
 	/*IN VIEWING TASKS MODE*/
 	printf("TASK=%d\n", TASK);
