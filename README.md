@@ -29,21 +29,18 @@ Note: you can either create your own new user when running `client.c` for the fi
 
 ```
 users/
-
-    user1/
-        aardvark/
-	baboon/
-	camel/
-	
-    user2/
-        dog/
-        elephant/
-	flamingo/
-	
-    user3/
-	giraffe/
-	hippo/
-	iguana/
+	user1/
+		aardvark/
+		baboon/
+		camel/
+	user2/
+		dog/
+        	elephant/
+		flamingo/	
+    	user3/
+		giraffe/
+		hippo/
+		iguana/
 ```
 
 Projects a particular user manages are listed as directories within that user's directory. You can peruse the structure further in our repository, but this is all you need to understand how to test stuff out.
