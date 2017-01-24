@@ -202,6 +202,10 @@ int view_proj( char* buffer, char* username){
 int proj_process( char* buffer, int proj_num, char* username ){
   if (strcmp(buffer, "0") == 0){
     /*TODO: PASTE ALL TASKS INTO BUFFER*/
+    char *proj_name; proj_name = (char *)malloc(50 * sizeof(char *));
+    char num[4]; sprintf(num, "%d", proj_num);
+    get_proj_name( proj_name, username, num );
+    all_tasks( buffer, username, proj_name );
     return 0;
   } else if (strcmp(buffer, "1") == 0){
     /*TODO: PASTE THIS username'S TASKS INTO BUFFER*/
@@ -275,7 +279,28 @@ bool is_manager( char* username, char* proj_name ) {
   return false;*/
 }
 
-void all_tasks( char* buffer, char* username );
+void all_tasks( char* buffer, char* username, char* proj_name ) {
+
+  char *path; path = (char *)malloc(50 * sizeof(char *));
+  char *task; task = (char *)malloc(50 * sizeof(char *));
+
+  if( is_manager(username, proj_name) ) {
+
+    sprintf(path, "users/%s/tasks.csv", proj_name);
+    printf("path: %s\n", path);
+    char arr[100][4][1024];
+    int rows=parse_csv(path, arr); int r=0;
+
+    for(r=0; r<rows; r++) {
+      sprintf(task, "%s - [%s] %s - %s", arr[r][0], arr[r][1], arr[r][2], arr[r][3]);
+      strcat(buffer, task);
+    }
+    
+  } else {
+    strcat(buffer, "You are not authorized to use this command.");
+  }
+
+}
 void my_tasks( char* buffer, char* username ) {
 
   char path[100];
