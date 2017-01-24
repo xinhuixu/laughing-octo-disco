@@ -202,6 +202,7 @@ int proj_process( char* buffer, int proj_num, char* username ){
     return 0;
   } else if (strcmp(buffer, "1") == 0){
     /*TODO: PASTE THIS username'S TASKS INTO BUFFER*/
+    my_tasks(buffer, username);
     return 1;
   } else if (strcmp(buffer, "2") == 0){
     /*TODO: add member, prompt for new member name, manager only*/
@@ -272,7 +273,35 @@ bool is_manager( char* username, char* proj_name ) {
 }
 
 void all_tasks( char* buffer, char* username );
-void my_tasks( char* buffer, char* username );
+void my_tasks( char* buffer, char* username ) {
+
+  char path[100];
+  sprintf(path, "users/%s/pii.csv", username);
+
+  char *task;
+  task = (char *)malloc(50 * sizeof(char *));
+
+  char arr[100][4][1024];
+  int cols=1, rows=parse_csv(path, arr); int r=0, c=0;
+
+  for(r=0; r<rows; r++) {
+    for(c=0; c<cols; c++) {
+
+      sprintf(path, "users/%s/tasks.csv", arr[r][c]);
+      char arr2[100][4][1024];
+      int rows2 = parse_csv(path, arr2); int r2=0;
+      
+      for(r2=0; r2<rows2; r2++) {
+	if( strcmp(arr2[r2][0], username) == 0 ) {
+	  sprintf(task, "\t[%s] %s\n", arr2[r2][2], arr2[r2][1]);
+	  strcat(buffer, task);
+	}
+      }
+
+    }
+  }
+  
+}
 void add_task( char* buffer, char* proj_name, char* username, char *task, char *deadline ) {
 
   char path[100];
@@ -285,7 +314,7 @@ void add_task( char* buffer, char* proj_name, char* username, char *task, char *
     sprintf(buffer, "Great! You successfully added assigned %s [%s], due %s.\n", username, task, deadline);
   else
     sprintf(buffer, "Sorry! This task was not added.\n");
-
+  
 }
 
 void remove_task( char* proj_name, char* username, char *task, char* buffer ) {
