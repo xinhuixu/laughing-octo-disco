@@ -206,9 +206,11 @@ int proj_process( char* buffer, int proj_num, char* username ){
     get_proj_name( proj_name, username, num );
     all_tasks( buffer, username, proj_name );
     return 0;
+
   } else if (strcmp(buffer, "1") == 0){
     my_tasks(buffer, username);
     return 1;
+
   } else if (strcmp(buffer, "2") == 0){
     /*TODO: add member, prompt for new member name, manager only*/
     char proj[100];
@@ -286,10 +288,15 @@ int task_view( char* buffer, int TASK, char* username){
 
 int task_process( char*buffer, int TASK, char* username ){
   if (strcmp(buffer, "0") == 0){
-    //MARK NOT YET STARTED;
-    sprintf(buffer, "Marked.");
-  }
-    
+    sprintf(buffer, "Marked: Not yet started.");
+    return 0;
+  } else if (strcmp(buffer, "1") == 0) {
+    sprintf(buffer, "Marked: In progress.");
+    return 0;
+  } else if (strcmp(buffer, "2") == 0) {
+    sprintf(buffer, "Marked: Complete.");
+    return 0;
+  }    
   return 0;
 }
 
@@ -404,7 +411,7 @@ void update_status( char* buffer, char *username, char *proj_name, char *task, i
   
   for(r=0; r<rows; r++) {
     if( strcmp(arr[r][1], task) == 0 ) {
-      sprintf(curr, arr[r][3]);
+      sprintf(curr, "%s", arr[r][3]);
       break;
     }
   }

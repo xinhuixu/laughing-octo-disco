@@ -102,16 +102,18 @@ void sub_server( int sd ) {
 	PROJECT = view_proj(buffer, username);
       } else if (PROJECT == 1) {
 	/*IN VIEWING TASKS MODE*/
-	if (TASK != -1){
-	  TASK = task_view(buffer, TASK, username);
-	}
-	else {
+	
+	printf("TASK=%d\n", TASK);
+
+	if (TASK == -1){
+	  TASK =  task_view(buffer, atoi(buffer), username);
+	} else {
 	  TASK = task_process(buffer, TASK, username);
-	  PROJECT = -1;
 	}
-	//proj_process(buffer, atoi(buffer), username);
+
       } else if (PROJECT){
 	PROJECT = proj_process(buffer, PROJECT, username);
+
       } else if (PROJECT == 2){
 	/* MINI TASK-ASSSIGNMENT LOOP */
 	char task[100][10];
