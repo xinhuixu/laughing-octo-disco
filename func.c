@@ -74,19 +74,21 @@ bool list_projs( char* buffer, char* username ){
   char *proj; proj = (char *)malloc(50 * sizeof(char *));
   bool PROJ_EXISTS = false;
   
-  sprintf(path, "users/%s", username);
-  d = opendir(path);
-  int i = 1;
-  while ( (de = readdir(d)) ) {
-    if( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) || (strcmp(de->d_name, "pii.csv") == 0) ) {
-      ;
-    } else {
-      PROJ_EXISTS = true;
-      sprintf(proj, "\t[%d] %s\n", i, de->d_name);
+  sprintf(path, "users/%s/pii.csv", username);
+  
+  int i=1;
+  char arr[100][4][1024];
+  int rows = parse_csv(path, arr), cols=1; int r=0, c=0;
+  for(r=0; r<rows; r++) {
+    for(c=0; c<cols; c++) {
+      sprintf(proj, "\t[%d] %s\n", i, arr[r][c]);
       strcat(buffer, proj);
       i++;
     }
   }
+
+  if (i > 1)
+    PROJ_EXISTS = true;
   
   strcat(buffer, "Enter project number to view/edit.");
 
