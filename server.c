@@ -43,8 +43,9 @@ int main() {
 void sub_server( int sd ) {
   int pid;
   bool USER = false;
-  int HOME;
+  int HOME = -1;
   int PROJECT = -1;
+  int TASK = -1;
   char buffer[MESSAGE_BUFFER_SIZE];
   char home[MESSAGE_BUFFER_SIZE];
   strcpy(home, "[0]New project\t[1]My projects");
@@ -99,6 +100,16 @@ void sub_server( int sd ) {
       if (PROJECT == -1) {
 	//paste all projs into buffer, set PROJECT
 	PROJECT = view_proj(buffer, username);
+      } else if (PROJECT == 1) {
+	/*IN VIEWING TASKS MODE*/
+	if (TASK != -1){
+	  TASK = task_view(buffer, TASK, username);
+	}
+	else {
+	  TASK = task_process(buffer, TASK, username);
+	  PROJECT = -1;
+	}
+	//proj_process(buffer, atoi(buffer), username);
       } else if (PROJECT){
 	PROJECT = proj_process(buffer, PROJECT, username);
       } else if (PROJECT == 2){
