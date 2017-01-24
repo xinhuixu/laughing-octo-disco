@@ -99,7 +99,10 @@ void sub_server( int sd ) {
       } else if (PROJECT){
 	PROJECT = proj_process(buffer, PROJECT, username);
       } else if (PROJECT == 2){
-
+	/* MINI TASK-ASSSIGNMENT LOOP */
+	char task[100][10];
+	strcpy(task, buffer);
+	printf("TASK_ASS LOOP: buffer: %s\n");
       }
     } else if ( strcmp(buffer, "exit") == 0){
       exit(0);

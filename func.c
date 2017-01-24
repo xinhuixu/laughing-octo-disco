@@ -68,7 +68,7 @@ bool proj_exists( char* username, char* proj_name ){
 }
 
 bool list_projs( char* buffer, char* username ){
-
+  sprintf(buffer, "%s's projects:\n", username);
   DIR *d = NULL; struct dirent *de = NULL;
   char path[100];
   char *proj; proj = (char *)malloc(50 * sizeof(char *));
@@ -76,7 +76,7 @@ bool list_projs( char* buffer, char* username ){
   
   sprintf(path, "users/%s", username);
   d = opendir(path);
-  int i = 0;
+  int i = 1;
   while ( (de = readdir(d)) ) {
     if( (strcmp(de->d_name, ".") == 0) || (strcmp(de->d_name, "..") == 0) || (strcmp(de->d_name, "pii.csv") == 0) ) {
       ;
@@ -173,7 +173,7 @@ int view_proj( char* buffer, char* username){
 
       get_proj_name(proj_name, username, i);
       sprintf(buffer, "Project[%s]: %s\n", i, proj_name);
-      strcat(buffer,"[0]All tasks\t[1]My tasks\t[2]Add member\t[3]New task");
+      strcat(buffer,"[0]All tasks\t[1]My tasks\t[2]Add member\t[3]Add task");
   
       valid = true;
       break;
@@ -211,11 +211,29 @@ int proj_process( char* buffer, int proj_num, char* username ){
       return 2;
     } else {
       sprintf(buffer, "You are not authorized to use this command.");
+      
       return -1;
     }
     
   } else if (strcmp(buffer, "3") == 0){
     /*TODO: new task, manager only*/
+    /*CHECK IS MANAGER LOOP*/
+    char proj[100];
+    char num[4]; sprintf(num, "%d", proj_num);
+    get_proj_name(proj, username, num);
+    if (is_manager(username, proj)){
+
+      sprintf(buffer, "What task are you assigning?:");
+      return 2;
+    } else { //not a manager
+      sprintf(buffer, "You are not authorized to use this command.\n");
+      char num[500]; sprintf(num, "%d", proj_num);
+      //pass proj_number to view_proj, we're goin back to viewing the proj!
+      view_proj(num, username);
+      strcat(buffer, num);
+      return -1;
+    }
+  
   }
 
   return -1;
@@ -234,11 +252,13 @@ bool is_manager( char* username, char* proj_name ) {
   sprintf(path, "users/%s/%s/members.csv", username, proj_name);  
   FILE * members = fopen(path, "r");  
 
-  if (errno)
+  if (errno == -1){
+    printf("[%s] is NOT the manager of project [%s]\n", username, proj_name);
     return false;
-  else
+  }else{
+    printf("[%s] is the manager of project [%s]\n", username, proj_name);
     return true;
-  
+  }
   /*char buf[20];  
   fgets(buf, 20, members); //fgets reads until first newline
   if (strcmp(buf, username) == 0){
