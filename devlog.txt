@@ -1,0 +1,21 @@
+DEVLOG
+
+12/31/16 (BOTH): Initial commit
+01/06/17 (BOTH): Collaborated via Google Docs on design doc; uploaded to repo
+01/09/17 (in class) (BOTH): Add dummy test cases
+01/12/17 (in class) (Nala): Add networking dwsource
+01/12/17 (in class) (Xinhui): Begin working on networking
+01/13/17 (in class) (Xinhui): Progress with networking
+01/17/17 (in class) (Xinhui): More networking
+01/17/17 (Xinhui): More networking
+01/18/17 (Xinhui): Beginning to set up control flow
+01/18/17 (in class) (Nala): CSV parsing functionality
+01/19/17 (Nala): More CSV/string manip things
+01/19/17 (Xinhui): More control flow things
+01/20/17 (in class) (Nala): Began to fine-tine CSV parsing with specific functions (rather than basic file IO)
+01/21/17 (Xinhui): Control flow - basic project loop, some error handling
+01/22/17 (Xinhui): More control flow, listing all projects of a particular user, viewing projects, func.h
+01/21-22/17 (Nala): Working on CSV utils locally
+01/22/17 (Nala): Moved CSV utils back into main part of project repo, debugging CSV utils
+01/22/17 (Xinhui): Control flow loops, error handling, setting up prompts
+01/23/17 (in class, at home) (BOTH): Integrating both parts of the project
