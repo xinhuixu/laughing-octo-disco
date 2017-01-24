@@ -144,10 +144,11 @@ void new_proj( char* new_proj_name, char* username ){
 
   sprintf(path, "users/%s/pii.csv", username);
   char arr[100][4][1024];
-  int rows = parse_csv(path, arr) + 1;
-  strcpy( arr[rows][0], new_proj_name );
+  int rows = parse_csv(path, arr);
+  sprintf( arr[rows][0], "%s", new_proj_name );
+  rows++;
   write_to_file(path, arr, rows, 1);
-  
+  print_file(path, rows, 1);
 }
 
 int count_projs( char* username ){
