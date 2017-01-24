@@ -353,21 +353,6 @@ void add_task( char* buffer, char* proj_name, char* username, char *task, char *
   
 }
 
-void remove_task( char* proj_name, char* username, char *task, char* buffer ) {
-
-  char path[100];
-  sprintf(path, "users/%s/%s/tasks.csv", username, proj_name);
-  char arr[100][4][1024];
-  int r = parse_csv(path, arr);
-
-  int rem = remove_row(path, arr, username, task, r, 4);
-  if( rem == r-1 ) 
-    sprintf(buffer, "Great! You successfully removed [%s] from %s.\n", task, username);
-  else 
-    sprintf(buffer, "Sorry! This task was not removed.\n");
-  
-}
-
 void add_member( char* buffer, char* username, char* proj_name, char* new_member ) {
   
   char path[100];
